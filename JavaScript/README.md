@@ -5,8 +5,11 @@ Certainly I feel that I have been spoiled by JavaScipt these days; I mean, it's 
 - Hybrid Mobile Appication --- JavaScript (Cordova, Ionic, PhoneGap...)
 - Testing Automation --- JavaScript (PhantomJS, Selenium, CapserJS...)
 - Cross Platform Desktop Application: Oh yeah, finally, let us show off some C#.NET, Cocoa Desktop, QT skills, but the answer is... maybe JavaScript...? (Node Webkit)
+
 Gosh Darn it! Give me a break!
+
 I miss you all, buddies; and I truly like your syntax candies: Ruby, Python, even those C-family members... But sorry, not you, my dear PHP.
+
 It's a good time to cite down some common and classic pitfalls what I encountered over my JavaScript journey.
 
 ### #1: All about the scope
