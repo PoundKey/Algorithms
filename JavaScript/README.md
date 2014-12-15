@@ -47,7 +47,7 @@ It's a good time to cite down some common and classic pitfalls what I encountere
 
 ### #3 Object-Oriented JavaScript
 
-** function expression **
+** function declaration **
 ```javascript
     function Person(name, age, job){
         this.name = name;
