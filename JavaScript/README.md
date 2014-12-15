@@ -6,7 +6,7 @@ Certainly I feel that I have been spoiled by JavaScipt these days; I mean, it's 
 - Testing Automation --- JavaScript (PhantomJS, Selenium, CapserJS...)
 - Cross Platform Desktop Application: Oh yeah, finally, let us show off some C#.NET, Cocoa Desktop, QT skills, but the answer is... maybe JavaScript...? (Node Webkit)
 
-Gosh Darn it! Give me a break!
+Gosh Darn it! Give me a break.
 
 I miss you all, buddies; and I truly like your syntax candies: Ruby, Python, even those C-family members... But sorry, not you, my dear PHP.
 
@@ -42,5 +42,25 @@ It's a good time to cite down some common and classic pitfalls what I encountere
     it();
 
     output: undefined, 2
+
+```
+
+### #3 Object-Oriented JavaScript
+
+** function expression **
+```javascript
+    function Person(name, age, job){
+        this.name = name;
+        this.age = age;
+        this.job = job;
+        this.detail = function(){
+            console.log("Name: " + this.name);
+            console.log("Age: " + this.age);
+            console.log("Job: " + this.job);
+            console.log(this);// Person { name=" ", age=.., etc...}
+        }
+    }
+    var person = new Person("C.T Xue", 22, 'Software Developer');
+    person.detail();
 
 ```
