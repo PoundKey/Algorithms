@@ -14,53 +14,105 @@ It's a good time to cite down some common and classic pitfalls what I encountere
 
 ### #1: All about the scope
 ```javascript
-    var arr = 10;
-    it();
+  var arr = 10;
+  it();
 
-    function it() {
-      var arr = 21;
-      alt();
-      console.log(arr);
-    }
+  function it() {
+    var arr = 21;
+    alt();
+    console.log(arr);
+  }
 
-    function alt() {
-      arr = arr*5;
-      console.log(arr);
-    }
+  function alt() {
+    arr = arr*5;
+    console.log(arr);
+  }
 
-    output: 50, 21
+  output: 50, 21
 ```
 
 ### #2: Hoist the local variable in function and block scope.
 ```javascript
-    var a = 1;
-    function it() {
-      console.log(a)
-      var a = 2;
-      console.log(a)
-    }
-    it();
+  var a = 1;
+  function it() {
+    console.log(a)
+    var a = 2;
+    console.log(a)
+  }
+  it();
 
-    output: undefined, 2
+  output: undefined, 2
 
 ```
 
 ### #3 Object-Oriented JavaScript
 
-** function declaration **
+*function declaration*
 ```javascript
-    function Person(name, age, job){
-        this.name = name;
-        this.age = age;
-        this.job = job;
-        this.detail = function(){
-            console.log("Name: " + this.name);
-            console.log("Age: " + this.age);
-            console.log("Job: " + this.job);
-            console.log(this);// Person { name=" ", age=.., etc...}
-        }
-    }
-    var person = new Person("C.T Xue", 22, 'Software Developer');
-    person.detail();
+  function Person(name, age, job){
+      this.name = name;
+      this.age = age;
+      this.job = job;
+      this.detail = function(){
+          console.log("Name: " + this.name);
+          console.log("Age: " + this.age);
+          console.log("Job: " + this.job);
+          console.log(this);// Person { name=" ", age=.., etc...}
+      }
+  }
+  var person = new Person("C.T Xue", 22, 'Software Developer');
+  person.detail();
 
 ```
+
+### #4 Anonymous functional block
+
+*Singleton*
+```javascript
+
+  var dataStore = (function() {
+    var data = [];
+    console.log('Hello Close block anonymous function....');
+    return {
+      push: function (item) {
+        data.push(item);
+      },
+      pop: function() {
+        return data.pop();
+      },
+      length: function() {
+        return data.length;
+      }
+    };
+  }());
+
+Above is equivalent to:
+var dataStore = (function() {
+  var data = [];
+  var dataStore =  {
+    push: function (item) {
+      data.push(item);
+    },
+    pop: function() {
+      return data.pop();
+    },
+    length: function() {
+      return data.length;
+    }
+  };
+  return dataStore;
+}());
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
