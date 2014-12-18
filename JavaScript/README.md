@@ -77,7 +77,7 @@ It's a good time to cite down some common and classic pitfalls what I encountere
 // now have access to globals jQuery (as $) and YAHOO in this code
 }(jQuery, YAHOO));
 
-*Singleton*
+Singleton:
 
   var dataStore = (function() {
     var data = [];
@@ -135,7 +135,10 @@ function newDataStore() {
     };
 }
 var dataStore = newDataStore();
+```
 
+### #5 Anonymous closure functional block
+```javascript
 Class Prototyping as of ECMAScript 5.1
 
 function Templater() {
@@ -162,6 +165,62 @@ Templater.prototype = {
 };
 
 var templater = new Templater();
+
+A more solid example:
+
+function Datastore(name) {
+  this.data = [];
+  this.name = name;
+}
+
+Datastore.prototype = {
+  yield : function () {
+    console.log('Datastore name: ' + this.name);
+  },
+  length : function () {
+    console.log('Datastore.length: ' + this.data.length);
+  },
+  add : function (item) {
+    this.data.push(item);
+  }
+}
+
+var db = new Datastore('Redis');
+
+A combined example of Clousre, Singleton and Class Prototype.
+
+var DB = (function(){
+
+  var basic = 21;
+
+  function Datastore(name) {
+    this.data = [];
+    this.name = name;
+  };
+
+  Datastore.prototype = {
+    yield : function () {
+      console.log('Datastore name: ' + this.name);
+    },
+    length : function () {
+      console.log('Datastore.length: ' + this.data.length);
+    },
+    add : function (item) {
+      this.data.push(item);
+    },
+    show: function () {
+      console.log('Static Basic: ' + basic);
+      basic  = basic += 21;
+    }
+  };
+
+  return Datastore;
+
+}());
+
+// In such case, staitc variables name collision can be avoided (eg: var basic)
+// And the static variable basic is shared and always kept in the Memory
+var db = new DB('Redis');
 
 ```
 
