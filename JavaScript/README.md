@@ -65,14 +65,22 @@ It's a good time to cite down some common and classic pitfalls what I encountere
 
 ```
 
-### #4 Anonymous functional block
+### #4 Anonymous closure functional block
+```javascript
+(function () {
+    // ... all vars and functions are in this scope only
+    // still maintains access to all globals
+}());
+
+//module with global variables $ and YAHOO as parameters
+(function ($, YAHOO) {
+// now have access to globals jQuery (as $) and YAHOO in this code
+}(jQuery, YAHOO));
 
 *Singleton*
-```javascript
 
   var dataStore = (function() {
     var data = [];
-    console.log('Hello Close block anonymous function....');
     return {
       push: function (item) {
         data.push(item);
@@ -86,22 +94,74 @@ It's a good time to cite down some common and classic pitfalls what I encountere
     };
   }());
 
-Above is equivalent to:
-var dataStore = (function() {
-  var data = [];
-  var dataStore =  {
-    push: function (item) {
-      data.push(item);
-    },
-    pop: function() {
-      return data.pop();
-    },
-    length: function() {
-      return data.length;
+Template:
+var MODULE = (function () {
+    var mod = {},
+    privateVariable = 1;
+    function privateMethod() {
+        // ...
     }
-  };
-  return dataStore;
+
+    mod.moduleProperty = 1;
+    mod.moduleMethod = function () {
+        // ...
+    };
+
+    return mod;
 }());
+
+Extend a module:
+var MODULE = (function (mod) {
+    mod.anotherMethod = function () {
+        // added method...
+    };
+
+    return mod;
+}(MODULE));
+
+Class-like Way:
+function newDataStore() {
+    var data = [];
+    return {
+        push: function (item) {
+            data.push(item);
+        },
+        pop: function() {
+            return data.pop();
+        },
+        length: function() {
+            return data.length;
+        }
+    };
+}
+var dataStore = newDataStore();
+
+Class Prototyping as of ECMAScript 5.1
+
+function Templater() {
+    this._templates = {};
+}
+
+Templater.prototype = {
+    _supplant: function(str, params) {
+        for (var prop in params) {
+            str.split("{" + prop +"}").join(params[prop]);
+        }
+        return str;
+    },
+    render: function(name, params) {
+        if (typeof this._templates[name] !== "string") {
+            throw "Template " + name + " not found!";
+        }
+
+        return this._supplant(this._templates[name], params);
+    },
+    defineTemplate: function(name, template) {
+        this._templates[name] = template;
+    }
+};
+
+var templater = new Templater();
 
 ```
 
