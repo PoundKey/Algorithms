@@ -28,7 +28,7 @@ It's a good time to cite down some common and classic pitfalls what I encountere
     console.log(arr);
   }
 
-  output: 50, 21
+  // output: 50, 21
 ```
 
 ### #2: Hoist the local variable in function and block scope.
@@ -41,13 +41,13 @@ It's a good time to cite down some common and classic pitfalls what I encountere
   }
   it();
 
-  output: undefined, 2
+  // output: undefined, 2
 
 ```
 
 ### #3 Object-Oriented JavaScript
 
-*function declaration*
+// function declaration
 ```javascript
   function Person(name, age, job){
       this.name = name;
@@ -77,7 +77,7 @@ It's a good time to cite down some common and classic pitfalls what I encountere
 // now have access to globals jQuery (as $) and YAHOO in this code
 }(jQuery, YAHOO));
 
-Singleton:
+// Singleton:
 
   var dataStore = (function() {
     var data = [];
@@ -94,7 +94,7 @@ Singleton:
     };
   }());
 
-Template:
+// Template:
 var MODULE = (function () {
     var mod = {},
     privateVariable = 1;
@@ -110,7 +110,7 @@ var MODULE = (function () {
     return mod;
 }());
 
-Extend a module:
+// Extend a module:
 var MODULE = (function (mod) {
     mod.anotherMethod = function () {
         // added method...
@@ -119,7 +119,7 @@ var MODULE = (function (mod) {
     return mod;
 }(MODULE));
 
-Class-like Way:
+// Class-like Way:
 function newDataStore() {
     var data = [];
     return {
@@ -139,7 +139,7 @@ var dataStore = newDataStore();
 
 ### #5 Anonymous closure functional block
 ```javascript
-Class Prototyping as of ECMAScript 5.1
+// Class Prototyping as of ECMAScript 5.1
 
 function Templater() {
     this._templates = {};
@@ -166,7 +166,7 @@ Templater.prototype = {
 
 var templater = new Templater();
 
-A more solid example:
+// A more concrete example:
 
 function Datastore(name) {
   this.data = [];
@@ -187,7 +187,7 @@ Datastore.prototype = {
 
 var db = new Datastore('Redis');
 
-A combined example of Clousre, Singleton and Class Prototype.
+// A combined example of Clousre, Singleton and Class Prototype.
 
 var DB = (function(){
 
@@ -234,6 +234,59 @@ var db = new DB('Redis');
      };
     window.jQuery = jQuery.
 })();
+
+```
+
+###7 Call and Apply
+```javascript
+// one sentence description: they're capable of changing the context (this)
+func.call(this, arg1, arg2, arg3) == func.apply(this, arguments) == this.func(arg1, arg2, arg3)
+
+// a more concrete example
+var obj1 = { which : "obj1" },
+    obj2 = { which : "obj2" };
+
+function execute(arg1, arg2){
+  console.log(this.which, arg1, arg2);
+}
+
+execute("UBC", "Vancouver");
+//output: undefined 'UBC' 'Vancouver' :the context is window object
+
+execute.call(obj1, "UBC", "Vancouver");
+//using call, output: obj1 UBC Vancouver :now the context is obj1
+
+execute.apply(obj2, ["UBC", "Vancouver"]);
+//using apply, output: obj2 UBC Vancouver :now the context is obj2
+
+// another example
+var friend = {
+    car: false,
+    lendCar: function ( canLend ){
+      this.car = canLend;
+ }
+
+};
+
+var me = {
+    car: false,
+    gotCar: function(){
+      return this.car === true;
+  }
+};
+
+console.log(me.gotCar()); // false
+
+friend.lendCar.call(me, true);
+
+console.log(me.gotCar()); // true
+
+friend.lendCar.apply(me, [false]);
+
+console.log(me.gotCar()); // false
+
+// the power is all about borrowing a function from another object;
+// in the example above, 'me' borrows the function lendCar from the 'friend'
 
 ```
 
