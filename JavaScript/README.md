@@ -224,8 +224,18 @@ var db = new DB('Redis');
 
 ```
 
+### #6 jQuery simplified with closure
+```javascript
+(function() {
+    var privateVariable1;
+    var privateVariable2;
+    var jQuery = {
+      /* all public methods go here */
+     };
+    window.jQuery = jQuery.
+})();
 
-
+```
 
 
 
