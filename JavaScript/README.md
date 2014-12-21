@@ -237,7 +237,7 @@ var db = new DB('Redis');
 
 ```
 
-###7 Call and Apply
+### #7 Call and Apply
 ```javascript
 // one sentence description: they're capable of changing the context (this)
 func.call(this, arg1, arg2, arg3) == func.apply(this, arguments) == this.func(arg1, arg2, arg3)
@@ -259,7 +259,7 @@ execute.call(obj1, "UBC", "Vancouver");
 execute.apply(obj2, ["UBC", "Vancouver"]);
 //using apply, output: obj2 UBC Vancouver :now the context is obj2
 
-// another example
+// another concrete example
 var friend = {
     car: false,
     lendCar: function ( canLend ){
@@ -290,8 +290,55 @@ console.log(me.gotCar()); // false
 
 ```
 
+### #8 Execution Context & Execution Context Stack
+```javascript
+var b1 = "b1";
+
+    function ftn1(){
+        console.log(this); // Output： window
+        var b2 = "b2";
+        var b1 = "bbb";
+
+        function ftn2(){
+            console.log(this); // Output： window
+            var b3 = "b3";
+            b2 = b1;
+            b1 = b3;
+            console.log("b1:" + b1 + "; b2:" + b2 + "; b3:" + b3); // Ouput：b1:b3; b2:bbb; b3:b3
+        }
+
+        ftn2();
+    }
+
+    ftn1();
+// Key concept here: The scope chain, and the context of function declaration is always the window
+
+// Another example, with different context
+var obj = {
+
+    name:"C.T Xue",
+
+    ftn:function(){
+
+        console.log(this); // Output: Object { name="C.T Xue", ftn=function()}
+
+        console.log(this.name); //Ouptput: C.T Xue
+
+    }
+
+}
+
+obj.ftn();
 
 
+```
+
+
+
+### #
+```javascript
+
+```
 
 
 
