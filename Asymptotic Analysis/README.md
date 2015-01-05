@@ -26,3 +26,13 @@
 QED
 
 - - -
+
+### Analysis of Algorithms
+- How long the program runs (Time complexity) and how much memory it uses (Space complexity)
+- Input size n (a non-negative integer, sometimes multiple measure)
+- Example of running time:
+	- T(n) =  4n + 5
+	- T(n) = 0.5nlog(n) - 2n + 7
+	- T(n) = 2^n + n^3 + 3n
+
+![Rate of Growth](./img/rate.png)
