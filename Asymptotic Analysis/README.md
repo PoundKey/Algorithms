@@ -36,3 +36,21 @@ QED
 	- T(n) = 2^n + n^3 + 3n
 
 ![Rate of Growth](./img/rate.png)
+
+- - -
+
+### Big-O Notation
+![Big O](./img/bigo.png)
+
+#### Big-Omega and Big-Theta Notation
+![Big Omega Theta](./img/bigt.png)
+
+### L’Hospital’s Rule
+![L’Hospital’s Rule](./img/lhrule.png)
+
+### Typical Asymptotics
+![Typical Asymptotics](./img/type.png)
+
+#### Sample Asymptotic Relations
+![Typical Asymptotics](./img/rel.png)
+
