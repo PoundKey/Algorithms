@@ -54,3 +54,51 @@ QED
 #### Sample Asymptotic Relations
 ![Typical Asymptotics](./img/rel.png)
 
+#### Runtime Example:
+```python
+	i = 1
+	while i < n:
+		for j = 1 to i:
+			sum = sum + 1
+		i += i
+```
+- For each 'while loop', the inner 'for loop' gets runned for i times
+- i = 1, 2, 4, 8, 16...
+- Hence in total, T(n) = 1 + 2 + 4 + 8 + 16...  => Sum(2^k) [k=0, ceil(__lg(n)__)-1]
+- Formula that should be implanted as a computer scientiest:
+- __Sum(2^k) [k=0, n] = 2^(n+1) - 1__
+- Hence, T(n) = 2^ceil(lg(n)) - 1 <= 2^(lg(n)+1) - 1 <= 2n - 1
+- Therefore, T(n) ∈ Θ(n)
+
+- - -
+
+### Arithmetic Sequences
+Find value at term __n__, given initial term = __a__, and diff = __d__:
+
+![Arithmetic Sequences](./img/arith.png)
+
+Summation of Arithmetic Sequences:
+
+![Arithmetic Sequences Sum](./img/asum.png)
+
+### Geometric Sequences
+Find value at term __n__, given initial term = __a__, and common ratio = __r__:
+
+![Geometric Sequences](./img/geo.png)
+
+Summation of Geometric Sequences:
+
+![Geometric Sequences Sum](./img/geosum.png)
+
+Special case when abs(r) < 1:
+
+![Geometric Sequences Sum](./img/geosum2.png)
+
+- - -
+
+### [Summation of 2 to the power of n](http://math.stackexchange.com/questions/22599/how-do-i-prove-this-by-induction-sum-of-powers-of-2)
+Prove that for every natural number __n__,
+
+![2 to the power of n Sum](./img/2power.png)
+
+
