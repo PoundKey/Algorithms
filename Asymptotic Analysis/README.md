@@ -101,4 +101,8 @@ Prove that for every natural number __n__,
 
 ![2 to the power of n Sum](./img/2power.png)
 
+### Solving Recurrence
+
+#### Substitution:
+![Recurrence](./img/recur.png)
 
