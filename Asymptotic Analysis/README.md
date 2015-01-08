@@ -119,6 +119,7 @@ __Note__:
 		- if so, return it
 		- if not, calculate it and store it in the table
 - This strategy is called memoization and is closely related to __dynamic programming__.
+- Generally, dynamic programming takes Θ(n)
 
 __Tail Recursion__: <br>
 In traditional recursion, the typical model is that you perform your recursive calls first, and then you take the return value of the recursive call and calculate the result.
@@ -202,5 +203,12 @@ int bSearch(int A[], int key, int i, int j) {
 }
 
 ```
+
+__Another Runtime Example:__ <br>
+Find a tight bound on T(n) = lg(n!) <br>
+Solution: Θ(nlog(n))
+
+### Log Aside
+![Log Aside](./img/log.png)
 
 
