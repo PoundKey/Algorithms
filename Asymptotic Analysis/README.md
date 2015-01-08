@@ -106,3 +106,101 @@ Prove that for every natural number __n__,
 #### Substitution:
 ![Recurrence](./img/recur.png)
 
+__Mergesort__:
+
+![Recurrence Mergesort](./img/merge.png)
+
+__Note__:
+
+- To avoid recursive calls:
+  - store base case values in a table
+	- before calculating the value for n
+		- check if the value for n is in the table
+		- if so, return it
+		- if not, calculate it and store it in the table
+- This strategy is called memoization and is closely related to __dynamic programming__.
+
+__Tail Recursion__: <br>
+In traditional recursion, the typical model is that you perform your recursive calls first, and then you take the return value of the recursive call and calculate the result.
+In tail recursion, you perform your calculations first, and then you execute the recursive call, passing the results of your current step to the next recursive step. <br>
+
+```python
+# Normal recursion
+def recsum(x):
+ if x == 1:
+  return x
+ else:
+  return x + recsum(x - 1)
+
+
+"""
+# Python interpreter would evaluate.
+recsum(5)
+5 + recsum(4)
+5 + (4 + recsum(3))
+5 + (4 + (3 + recsum(2)))
+5 + (4 + (3 + (2 + recsum(1))))
+5 + (4 + (3 + (2 + 1)))
+15
+
+"""
+
+# Tail recursion
+def tailrecsum(x, running_total=0):
+  if x == 0:
+    return running_total
+  else:
+    return tailrecsum(x - 1, running_total + x)
+
+
+"""
+# Python interpreter would evaluate.
+tailrecsum(5, 0)
+tailrecsum(4, 5)
+tailrecsum(3, 9)
+tailrecsum(2, 12)
+tailrecsum(1, 14)
+tailrecsum(0, 15)
+15
+
+"""
+
+```
+
+__Eliminating Tail Recursion__: <br>
+
+```c
+// Search A[i..j] for key (Binary Search)
+// init: i=0, j=length(A)-1
+// Return index of key or -1 if key not found.
+
+int bSearch(int A[], int key, int i, int j) {
+	if (j < i) return -1;
+	int mid = (i + j) / 2;
+	if (key < A[mid])
+		return bSearch(A, key, i, mid-1);
+	if (key > A[mid])
+		return bSearch(A, key, i, mid+1);
+	else
+		return mid;
+}
+
+// To eliminate tail recursion, the key is to store the local variables
+// bSearch without tail recursion
+
+int bSearch(int A[], int key, int i, int j) {
+	while ( j >= i) {
+		int mid = (i + j) / 2;
+		if (key < A[mid])
+			j = mid - 1;
+		else if (key > A[mid])
+			i = mid + 1;
+		else
+			return mid;
+	}
+	return -1;
+}
+
+```
+
+
