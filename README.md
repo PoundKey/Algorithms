@@ -1,6 +1,7 @@
 Algorithm
 =========
 
->Rock the brain and play some algorithms, starting from bolts and nuts. I am serious.
+>Rock the brain and play some algorithms, starting from bolts and nuts.
 
-### Tracking Algorithm Practices
+>Rolling in the deep, I am very serious.
+
