@@ -1,7 +1,5 @@
-Algorithm
+![Algorithm](./Classic Problems Preview/img/algo.jpg)
 =========
-
->Rock the brain and play some algorithms, starting from bolts and nuts.
-
->Rolling in the deep, I am very serious.
+ - _Rock the brain and play some algorithms, starting from bolts and nuts._
+ - _Rolling in the deep, I am very serious._
 
