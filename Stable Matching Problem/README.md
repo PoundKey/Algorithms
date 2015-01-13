@@ -1,4 +1,4 @@
-## Stable Matching Problem
+# Stable Matching Problem
 ### Definitions
 __Perfect matching__: So consider a set M = {mx<sub>1</sub>, . . . , mx<sub>n</sub>} of n men, and a set W = {w<sub>1</sub>, . . . , w<sub>n</sub>} of n women. A matching S is a set of ordered pairs, each from M × W, with the property that each member of M and each member of W appears in __at most__ one pair in S. (each man and each woman belong to at most one of the ordered pairs.) A perfect matching S′ is a matching with the property that each member of M and each member of W appears in __exactly one__ pair in S′. (each man and each woman belong to exactly one of the ordered pairs.)
 
