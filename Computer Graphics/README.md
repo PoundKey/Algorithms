@@ -67,12 +67,24 @@ Vector a: ( a<sub>1</sub>, a<sub>2</sub>, …, a<sub>n</sub> ), Vector b: ( b<su
 _a · b = a<sub>1</sub> × b<sub>1</sub> + a<sub>2</sub> × b<sub>2</sub> + ... + a<sub>n</sub> × b<sub>n</sub>_  
 a · b = ||a||<sup>2</sup> 
 
-#### Orthonormal basis
-
-
+![dot product](./img/eg.png)
 
 #### Orthogonal
+Two vectors are orthogonal if a · b = 0, which implies that Θ = 90. (Perpendicular)
 
+#### Unit Vector
+A vector with has a length of 1. (||v|| = 1)
+
+#### Orthonormal basis
+> A basis in which all vectors are orthogonal, and have norm = 1.
+
+- all vectors are unit vectors
+- all vectors are orthogonal
+- linearly independent
+- eg. { (1, 0, 0), (0, 1, 0), (0, 0, 1) }
+
+Dot product of two vectors u, v in an orthonormal basis:  
+_u · v = u<sub>1</sub> × v<sub>1</sub> + u<sub>2</sub> × v<sub>2</sub> + ... + u<sub>n</sub> × v<sub>n</sub>_
 
 ---
 Let V be a R-vector space and v<sub>1</sub>,...,v<sub>k</sub> ∈ V. If v<sub>k</sub> is in the span of v<sub>1</sub>, ..., v<sub>k-1</sub>, then:  
