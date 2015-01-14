@@ -1,4 +1,4 @@
-# CPSC 416 Distributed Systems
+# CPSC 404 Advanced Database
 
 ### Buffer Manager
 - The software layer responsible for bringing pages from disk to main memory as needed.
