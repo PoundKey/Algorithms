@@ -208,6 +208,41 @@ __Another Runtime Example:__ <br>
 Find a tight bound on T(n) = lg(n!) <br>
 Solution: Θ(nlog(n))
 
+### Solving Common Recurrences
+- Linear search
+	- T(1) = b
+	- T(n) = c + T(n-1)
+	- T(n) = O(n)
+- Quicksort
+	- T(1) = b
+	- T(n) = c·n + T(n-1)
+	- T(n) = O(n<sup>2</sup>)
+- Binary Search
+	- T(1) = b
+	- T(n) = c + T(n/2)
+	- T(n) = O(lg(n))	
+- Example 4
+	- T(1) = b
+	- T(n) = c·n + T(n/2)
+	- T(n) = O(n)	
+- Example 5
+	- T(1) = b
+	- T(n) = c + k·T(n/k)
+	- T(n) = O(n)	
+- Mergesort
+	- T(1) = b
+	- T(n) = c·n + 2T(n/2)
+	- T(n) = O(nlg(n))
+- Example 7
+	- T(1) = b
+	- T(n) = c·n + k·T(n/k)
+	- T(n) = O(nlg(n))
+- Fibonacci
+	- T(1) = a
+	- T(2) = b
+	- T(n) = T(n-1) + T(n-2) + c
+	- T(n) = O(2<sup>n</sup>)
+
 ### Log Aside
 ![Log Aside](./img/log.png)
 
