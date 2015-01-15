@@ -18,15 +18,6 @@ for i=(n-1) to 1
 ```
 __Runtime__: О(n<sup>2</sup>) Comparsions
 
-### Selection sort
->__Definition__: 
-
-```python
-```
-__Runtime__: О(n<sup>2</sup>) Comparsions  
-__Stability__: Very stable  
-__Memory__: 
-
 ### Insertion sort
 >__Definition__: At the start of iteration i, the first i elements in the array are sorted, and we insert the (i+1)st element into its proper place. Insertion sort takes advantage of presorting, it only requires one comparsion per element for a presorted list.
 
@@ -42,6 +33,13 @@ __Runtime__: О(n<sup>2</sup>) Comparsions
 __Stability__: Very stable  
 __Memory__: Sorting is done in-place, a constant number of extra memory locations are used.
 
+### Selection sort
+>__Definition__: Given an array, search for the smallest element and swap it into the first position.
+
+__Runtime__: О(n<sup>2</sup>) Comparsions. Generally, worse runtime compared to insertion sort.
+__Stability__: Stable  
+__Memory__: In-place
+
 ### Heapsort (1964)
 >__Definition__: Divides its input into a sorted and an unsorted region, and it iteratively shrinks the unsorted region by extracting the smallest element and moving that to the sorted region
 
@@ -53,7 +51,12 @@ __Stability__: Not stable, use index in input array to break down comparison tie
 __Memory__: in-place. (Avoid using another array to store the result)
 
 ### Mergesort
->__Definition__: 
+>__Definition__: A divide and conquer algorithm
+
+- If the array has 0 or 1 element, it's sorted, stop. __T(n) = 1__
+- Split the array into two approximately equal-sized halves.
+- Sort each half recursively (using Mergesort). __2T(n/2)__
+- Merge the sorted halves to produce one sorted result. __n__
 
 ```cpp
 void mergesort(int x[], int n) {
@@ -85,13 +88,8 @@ void merge(int x[], int lo, int mid, int hi, int tmp[]) {
 ```
 ![Merge sort](./img/mergesort.png)
 
-### Quicksort
-__Definition__: A divide and conquer algorithm
-
-- If the array has 0 or 1 element, it's sorted, stop. __T(n) = 1__
-- Split the array into two approximately equal-sized halves.
-- Sort each half recursively (using Mergesort). __2T(n/2)__
-- Merge the sorted halves to produce one sorted result. __n__
+### Quicksort (1961)
+__Definition__: 
 
 ```python
 ```
