@@ -4,7 +4,7 @@
 > An index can be created in a table to find data more quickly and efficiently. Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). So only create indexes on columns (and tables) that will be frequently searched against.  
 > SQL example: _CREATE INDEX index_name ON table_name (column_name)_
 
-- DBMS = Data + Data Structure
+- DBMS = Data + Data Structure + Seaching Algorithm
 - 
 
 
