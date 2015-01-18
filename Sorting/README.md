@@ -88,11 +88,40 @@ void merge(int x[], int lo, int mid, int hi, int tmp[]) {
 ```
 ![Merge sort](./img/mergesort.png)
 
+__Stability__: Stable  
+__Memory__: Not in-place
 ### Quicksort (1961)
 __Definition__: 
+![Quick sort](./img/quicksort.png)
 
-```python
+```cpp
+void qsort(int x[], int lo, int hi) {
+	int i, p;
+	if (lo >= hi) return;
+	p = lo;
+	for(i=lo+1; i<=hi; i++) {
+	if (x[i] < x[lo])
+		swap(x[++p], x[i]);
+
+	swap(x[lo], x[p]);
+	qsort(x, lo, p-1);
+	qsort(x, p+1, hi);
+	}
+}
+
+void quicksort(int x[], int n) {
+	qsort(x, 0, n-1);
+}
+
+// Invariant: x[lo] = pivot, x[lo+1...p] < pivot, x[p+1...i-1] >= pivot
+// Example: [2, -4, 1, 6, 5, -3, 3, 7]
 ```
-__Runtime__: О(n<sup>2</sup>) Comparsions  
-__Stability__: Very stable  
-__Memory__: 
+![Quick sort runtime](./img/qrun.png)
+
+__Stability__: Stable  
+__Memory__: In-place
+
+## Sorting Algorithms Comparsion
+![sort runtime](./img/comp.png)
+![sort runtime](./img/rcomp.png)
+![sort runtime](./img/scomp.png)
