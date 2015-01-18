@@ -1,4 +1,4 @@
-# CPSC 304 Computer Graphics
+# CPSC 314 Computer Graphics
 
 ### OpenGL Pipeline
 ![Vertex Shader](./img/vshader.png)
