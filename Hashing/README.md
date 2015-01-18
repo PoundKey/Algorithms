@@ -1,6 +1,6 @@
 # Hashing
 
-### Hash table:
+### Hash table
 Using a hash table to implement a dictionary ADT, then the find operation is:
 ```cpp
 find('GNU') == 'GNU is not Unix';
@@ -47,8 +47,64 @@ __Proof__:
 - Therefore, (x<sub>i</sub> | x<sub>j</sub>) or (x<sub>j</sub> | x<sub>i</sub>)
 
 ### Collision Resolution
-__Birthday Paradox__: With probability > 50%, two people, in a room of 23, have the same birthday.
-__Corollary__: If we randomly hash only sqrt(2m) keys into m slots, we get a collision with probability > 1/2
-__Collisions: What do you do when two keys hash to the same entry?  
-	1. Chaining: store multiple items in each entry
-	2. Open addressing: pick a next entry to try
+__Birthday Paradox__: With probability > 50%, two people, in a room of 23, have the same birthday.  
+__Corollary__: If we randomly hash only sqrt(2m) keys into m slots, we get a collision with probability > 1/2.  
+__Collisions__: When two keys hash to the same entry.  
+
+1. Chaining: store multiple items in each entry  
+2. Open addressing: pick a next entry to try
+
+## Hashing with Chaining
+> Store multiple items in each entry
+
+![Hash chaining](./img/chain.png)
+#### Hash: Chaining Code
+
+```cpp
+Dictionary &findSlot(const Key &k) {
+	return [hash(k) % table.size];
+} 
+
+void insert(const Key &k, const Value &v) {
+	findSlot(k).insert(k, v);
+}
+
+void delete(const Key &k) {
+	findSlot(k).delete(k);
+}
+
+Value &find(const Key &k) {
+	return findSlot(k).find(k);
+}
+
+// Pass in by reference because of efficiency concern
+``` 
+
+#### Access time for Chaining
+- __Load Factor__: ɑ = (# hashed items)/table_size = n/m (Meaning on average, there are ɑ items in each slot.)
+- __Search cost__: 
+	- an unsuccessful search examines ɑ items
+	- a successful search examines 1 + (n-1)/2m items
+- We want the __load factor__ to be small.
+
+## Hashing with Open addressing
+> Pick a next entry to try
+
+![Hash open addressing](./img/opa.png)
+
+### Probing
+![Hash open addressing](./img/probe.png)
+
+__Linear probing__: h(k, i) = (hash(k) + i) mod m
+```cpp
+Entry *find(const Key &k) {
+	int p = hash(k) % size;
+	for(int i=1; i<=size; i++) {
+		Entry *entry = &(table[p]);
+		if(entry->isEmpty()) return NULL;
+		if(entry->key == k) return entry;
+		p = (p+1) % size;
+	}
+	return NULL;
+}
+```
