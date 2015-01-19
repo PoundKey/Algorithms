@@ -77,7 +77,9 @@ Value &find(const Key &k) {
 	return findSlot(k).find(k);
 }
 
-// Pass in by reference because of efficiency concern
+// Pass in by reference because of efficiency concern;
+// nowdays the compier is smart enough to take care of this job.
+// Hence, it's optionally, escept you want to pass in a pointer by reference.
 ``` 
 
 #### Access time for Chaining
