@@ -47,12 +47,20 @@ We say that an undirected graph is a tree if it is connected and does not contai
 - The adjacency matrix representation allows us to check in O(1) time if a given edge (u, v) is present in the graph.
 - Disadvantage: The representation takes 􏰘⊝(n<sup>2</sup>) space, and many graph algorithms need to examine all edges incident to a given node v.
 
+_Undirected graph, adjacency matrix representation_:
+
+![Undirected Matrix](./img/umatrix.jpg)
+
 #### Adjacency List:
 - we have an array Adj, where Adj[v] is a record containing a list of all nodes adjacent to node v.
 - For an undirected graph G = (V, E), each edge e = (v, w) ∈ E occurs on two adjacency lists: node w appears on the list for node v, and node v appears on the list for node w.
 - Good for sparse graphs. It only requires O(m + n) space.
 
-> The adjacency matrix representation of a graph requires O(n2) space, while the adjacency list representation requires only O(m + n) space.
+_Undirected graph, adjacency list representation_:
+
+![Undirected List](./img/ulist.jpg)
+
+> The adjacency matrix representation of a graph requires O(n<sup>2</sup>) space, while the adjacency list representation requires only O(m + n) space.
 
 ### Breadth-First Search
 
