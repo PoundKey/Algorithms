@@ -1,5 +1,29 @@
 # CPSC 404 Advanced Database
 
+### Relationships among Files, Disks, RAM, Buffer Pool(s), DBMS, OS
+
+#### Typical Memory Hierarchy:
+![Memory Hierarchy](http://cse1.net/recaps/img/4-hierarchy.jpg)
+
+#### Components of a Disk Drive
+- The platters spin (e.g., 7200 rpm)
+- The whole arm assembly is moved in, or out, to position a head on a desired __track__, k.
+- All tracks with the same track # (e.g., track k) make up __cylinder__ k.
+- Block size is a multiple of sector size, the logical partition.
+- Only one head reads/writes at any one time.
+
+![Hard Drive Component](http://thewindowsclub.thewindowsclubco.netdna-cdn.com/wp-content/uploads/2012/10/diagram-of-hard-disk.png)
+
+#### Accessing a Disk Page:
+- Access time = Seek time + Rotational delay + Transfer time
+- Access time: time to read or write a disk page
+- Seek time: move arm to position the disk head at a cyl/track (1-20ms)
+- Rotational delay: wait for block to rotate under head (0-10ms)
+- Transfer time: move data between disk and RAM ( 1ms/4K page)
+
+__Example__: //TODO
+
+
 ### Indexes
 > An index can be created in a table to find data more quickly and efficiently. Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). So only create indexes on columns (and tables) that will be frequently searched against.  
 > SQL example: _CREATE INDEX index_name ON table_name (column_name)_
