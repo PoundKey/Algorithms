@@ -21,14 +21,74 @@
 - Rotational delay: wait for block to rotate under head (0-10ms)
 - Transfer time: move data between disk and RAM ( 1ms/4K page)
 
-__Example__: //TODO
+__Example__:
+
+- Megatron 747: disk rpm = 3840
+- Block size = 4096 bytes (4K)
+- 4 platters of 2 surfaces each 2<sup>13</sup> = 8192 cylinders
+- Average # sectors/track = 2<sup>8</sup> = 256
+- #bytes/sector = 2<sup>9</sup> = 512
+- Moving head assembly between cylinders = 1 ms (setup time) + 1 ms/500 cylinders
+
+1. What is the max/avg seek time?
+	- Max: the entire #cylinders: 1 + 8192/500 x 1ms
+	- Avg: __1/3__ of #cylinders: 1 + 8192/(3 x 500) x 1ms
+2. What is the max/avg rotational latency time?
+	- Max: the entire #sectors: 1/(3840/60) x 1000ms
+	- Age: __1/2__ of #sectors: Max/2
+3. What is the transfer time?
+	- Max*4/256 = transfer time in ms/block 
+
+#### Arranging Pages on Disk:
+- Prefetching for a sequential scan of data pages. (e.g., read 32 or more pages at a time)
+- Anticipatory prefetch - DBMS may be able to “predict” what the user wants to do next
+- Key to lowering I/O costs: reduce seek and rotation time!
+- __The “next block” concept__. We prefer to access: Blocks on same track > Blocks on same cylinder > Blocks on adjacent cylinders.
+- Arrange blocks in a file sequentially can minimize seek and rotational delays.
+
+#### Solid State Disks (SSDs)
+- Flash memory is based on EEPROMs (e.g., MP3 players, cameras, cell phones)
+- Advantages: No spinning disks or moving parts, lower power requirement and faster reads.
+- Disadvantages: Costy, smaller capacity, slower random writes, limited write cycles (~100000)\
+
+#### Ram vs. Disk:
+- About 5 orders of magnitude difference in speeds (nanoseconds vs. milliseconds)
 
 
-### Indexes
+#### Indexes
 > An index can be created in a table to find data more quickly and efficiently. Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). So only create indexes on columns (and tables) that will be frequently searched against.  
 > SQL example: _CREATE INDEX index_name ON table_name (column_name)_
 
 - DBMS = Data + Data Structure + Seaching Algorithm
+
+### Buffer Pool Management
+- A DBMS buffer pool is part of RAM, and is managed independently of the OS.
+- A page is the smallest unit of transfer between disk and main memory.
+- Logical memory has __“pages”__, and physical memory (RAM) has __“frames”__.
+- The Translation Lookaside Buffer (TLB), a fast L1 hardware cache used to determine whether or not a particular page is currently in memory.
+
+![Buffer Pool Management](./img/bpool.jpg)
+
+#### When a Page is Requested ...
+- If requested page is not in buffer pool:
+	- Choose a frame for replacement. If that frame is dirty, write it to disk, and read requested page into chosen frame.
+- Pin the new page and return its address
+	- __“Pin”__ = hold in memory & don’t allow another page to overwrite it; add 1 to the in-use count
+- Requestor of page must unpin it, and indicate whether the page has been modified:
+	- Maintain a dirty bit for the page
+- Page may be requested many times
+	- Maintain a pin count, and A page is a candidate for replacement iff: pin_count = 0
+- Concurrency control and recovery mechanisms may entail additional I/O when a frame is chosen for replacement
+	- e.g., Write-Ahead Log protocol
+
+#### Force vs. Steal; ARIES:
+- Related to __crash recovery__
+- __Force__: At transaction commit time, force (i.e., write) the transaction’s updated pages to disk (after writing the
+log records to disk.)
+- __Steal__: When the BP desperately needs a free page, we can write a dirty page for an uncommitted transaction to disk (i.e., we steal a frame from an in-flight transaction).
+
+#### Page fault occurs ...
+ when a program accesses a page that is mapped in the virtual address space, but not loaded in physical memory.
 
 ### Buffer Manager
 - The software layer responsible for bringing pages from disk to main memory as needed.
@@ -38,8 +98,30 @@ __Example__: //TODO
 - The ability to predict reference patterns allows for a better choice of pages to replace and makes the idea of specialized buffer replacmnent policies more attractive in the DBMS environment.
 - Being able to predict reference patterns enables the use of a simple and very effective strategy called __prefetching of pages__ (32-64 4KB pages in general.
 
-### Buffer Replacement Policies
-- least recently used (LRU)
-- clock replacement
-	- choose a page for replacement using a current variable that takes on values 1 through N, where N is the number of buffer frames, in circular order.
-- Other replacement policies include first in first out (FIFO) and most recently used (MRU).
+### Page Replacement Algorithms
+- FIFO: Victim = oldest page
+- Least Recently Used (LRU): Victim = page that hasn’t been referenced for the longest time
+- MRU: Victim = page that has been most recently used
+- Clock Replacement:
+	- Each page is given a “second chance”. We’ll cycle through the pages, as necessary, looking for a victim.
+	- Idea: If a page is referenced often enough, its reference bit (RB) will stay set, and it won’t be a victim.
+
+#### Clock Algorithm (One Version):
+We assume that an existing page in the BP that is reused has its RB set to 1 upon reuse (the RB can also reflect the pin count).
+
+```python
+If an empty frame exists in the BP:
+	- Use it to store the new page’s data
+	- Set its RB to 1 and set its arrival time to 'current'
+else:
+	- Find the oldest page (i.e., oldest timestamp) in the BP
+	- If that page’s RB is set to 0:
+		- Replace that BP page with the new one
+		- Set the new page’s RB to 1, and its arrival time to “current”
+	else: 
+		- Give that page a second chance (victim not found yet)
+		- Decrement that page’s RB to 0
+		- Update that page’s arrival time to “current”
+```
+
+#### Extended Clock Algorithm:
