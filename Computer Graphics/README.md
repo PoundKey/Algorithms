@@ -4,6 +4,7 @@
 ![Vertex Shader](./img/vshader.png)
 #### Vertex Shader
 - Shapes are “discretized” into primitives: __triangles__, line segments, ...
+- Display objects are composed of arrays of flat surfaces (typically triangles) and vertices define the location and other attributes of the corners of the surfaces.
 - Vertices are stored in a vertex buffer.
 - When a draw call is issued, each of the vertices passes through the vertex shader
 - On input to the vertex shader, each vertex (black) has associated attributes.
@@ -41,6 +42,10 @@
 	- Closure: If u and v are any vectors in V, then the sum   u + v   belongs to V.
 	- Closure: If v in any vector in V, and c is any real number, then the product   c · v   belongs to V.
 
+__Geometric data types__: points are shown as dots, and vectors as arrows.  
+
+![Notation](./img/noc.png)
+
 #### Linear combinations and span
 Let V be a R-vector space and v<sub>1</sub>,...,v<sub>k</sub> ∈ V. A linear combination of these vectors is any expression of the form:  
 _c<sub>1</sub>v<sub>1</sub> + c<sub>2</sub>v<sub>2</sub> + ... + c<sub>k</sub>v<sub>k</sub>_  
@@ -57,17 +62,24 @@ Let V be a subset of R<sup>n</sup>, V is a subspace of R<sup>n</sup> iff:
 - Contains the 0 vector
 - Closure under addition: the sum of any two elements in V is an element of V.
 - Closure under scalar multiplication: every scalar multiple of an element in V is an element of V
-- eg. The set V = {(x, 3 x): x ∈ R} is a Euclidean vector space, a subspace of R<sup>2</sup>.
+- eg. The set V = {(x, 3x): x ∈ R} is a Euclidean vector space, a subspace of R<sup>2</sup>.
 
 #### Basis
-Let V be a subspace of R<sup>n</sup> for some n. A collection B = { v<sub>1</sub>, v<sub>2</sub>, …, v<sub>r</sub>  } of vectors from V is said to be a basis for V if B is linearly independent and spans V. (Minimal set of vectors that span V, without redundancy.)
+Let V be a subspace of R<sup>n</sup> for some n. A collection B = { v<sub>1</sub>, v<sub>2</sub>, …, v<sub>r</sub>  } of vectors from V is said to be a basis for V if B is linearly independent and spans V. (Minimal set of vectors that span V, we can use a basis as a way to produce any of the vectors in the space.)
 
 #### Dot product
 Vector a: ( a<sub>1</sub>, a<sub>2</sub>, …, a<sub>n</sub> ), Vector b: ( b<sub>1</sub>, b<sub>2</sub>, …, b<sub>n</sub> )  
 _a · b = a<sub>1</sub> × b<sub>1</sub> + a<sub>2</sub> × b<sub>2</sub> + ... + a<sub>n</sub> × b<sub>n</sub>_  
-a · b = ||a||<sup>2</sup> 
+a · a = ||a||<sup>2</sup> 
 
 ![dot product](./img/eg.png)
+
+#### Cross product
+ The cross product a × b of two linearly independent vectors a and b is a vector that is perpendicular to both. (Orthogonal)
+
+![cross product](http://www.mathsisfun.com/algebra/images/cross-product.gif)
+![cross product](http://dj1hlxw0wr920.cloudfront.net/userfiles/wyzfiles/5141da12-b501-46d4-9f65-d9bd69c3afd2.gif)
+
 
 #### Orthogonal
 Two vectors are orthogonal if a · b = 0, which implies that Θ = 90. (Perpendicular)
@@ -84,7 +96,29 @@ A vector with has a length of 1. (||v|| = 1)
 - eg. { (1, 0, 0), (0, 1, 0), (0, 0, 1) }
 
 Dot product of two vectors u, v in an orthonormal basis:  
-_u · v = u<sub>1</sub> × v<sub>1</sub> + u<sub>2</sub> × v<sub>2</sub> + ... + u<sub>n</sub> × v<sub>n</sub>_
+_u · v = 0_
+
+#### Transformation
+Def: function operating on vectors. (e.g., T: R<sup>3</sup> -> R<sup>2</sup> == f: x -> y )
+
+#### Linear Transformation
+A linear transformation between two vector spaces V and W is a map T: V -> W such that the following hold:
+
+-  T(v<sub>1</sub>+v<sub>2</sub>) = T(v<sub>1</sub>)+T(v<sub>2</sub>) for any vectors v<sub>1</sub> and v<sub>2</sub> in V. (additivity)
+- T(av) = aT(v) for any scalar a. (homogeneity of degree 1)
+
+#### Matrix
+![cross product](http://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Matrix.svg/247px-Matrix.svg.png)
+
+#### Matrix-vector product
+ If A is an m x n matrix (i.e., with n columns), then the product Ax is defined for n x 1 column vectors x, resulting in m x 1 column vectors.  
+The general formula for a matrix-vector product is:
+
+![Matrix-vector product](./img/mvpro.png)
+
+__Note__: Can be also viewed as linear combination or span( v<sub>1</sub>, v<sub>2</sub>, …, v<sub>n</sub> = span(A) )
+
+#### Identity and Inverse 
 
 ---
 Let V be a R-vector space and v<sub>1</sub>,...,v<sub>k</sub> ∈ V. If v<sub>k</sub> is in the span of v<sub>1</sub>, ..., v<sub>k-1</sub>, then:  
