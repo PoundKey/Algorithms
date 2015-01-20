@@ -30,6 +30,29 @@
 - Details stored in an auxiliary image called a texture.
 - Traingles <=> Textures map to form graphics
 
+### Linear Transformations (Representations)
+The operation of the linear transformation operating on a vector can be expressed as:
+
+![Linear Transformations](./img/lrep.png)
+
+### Scales
+In order to model geometric objects, we may find it useful to apply scaling operations to vectors and bases. To scale any vector by factor of α, we can use:
+
+![Scales](./img/scale1.png)
+
+To scale differently along the 3 axis directions we can use the more general form:
+
+![Scales](./img/scale2.png)
+
+### Rotations
+A rotation is a linear transformation that preserves dot products between vectors.
+
+
+### Translations
+
+### Affine transformations
+
+
 ---
 ### Linear Algebra
 
@@ -116,9 +139,14 @@ The general formula for a matrix-vector product is:
 
 ![Matrix-vector product](./img/mvpro.png)
 
-__Note__: Can be also viewed as linear combination or span( v<sub>1</sub>, v<sub>2</sub>, …, v<sub>n</sub> = span(A) )
+__Note__: Can be also viewed as linear combination or span( v<sub>1</sub>, v<sub>2</sub>, …, v<sub>n</sub> ) = span(A)
 
 #### Identity and Inverse 
+ The identity matrix (I) or unit matrix of size n is the n × n square matrix with ones on the main diagonal and zeros elsewhere. 
+
+![Identity Matrix](http://upload.wikimedia.org/math/6/1/5/615ac6f1328ce0a67b46b5e4cbb121af.png)
+
+The __inverse__ of a matrix M is the unique matrix M<sup>−1</sup> with the property M M<sup>−1</sup> = M<sup>−1</sup>M = I.
 
 ---
 Let V be a R-vector space and v<sub>1</sub>,...,v<sub>k</sub> ∈ V. If v<sub>k</sub> is in the span of v<sub>1</sub>, ..., v<sub>k-1</sub>, then:  
