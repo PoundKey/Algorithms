@@ -67,7 +67,7 @@ __Example__:
 - Logical memory has __“pages”__, and physical memory (RAM) has __“frames”__.
 - The Translation Lookaside Buffer (TLB), a fast L1 hardware cache used to determine whether or not a particular page is currently in memory.
 
-![Buffer Pool Management](./img/bpool.jpg)
+![Buffer Pool Management](./img/bpool.png)
 
 #### When a Page is Requested ...
 - If requested page is not in buffer pool:
@@ -125,3 +125,27 @@ else:
 ```
 
 #### Extended Clock Algorithm:
+
+- Include both a reference bit and a dirty bit (RB/DB)
+- DB is set if page needs to be written to disk
+- Similar to Clock PRA
+- Again, victim search begins with the oldest page. The first 0/0 or 0/0* is the victim.
+	- 0/0 or 0/0* Becomes: Victim (* = write out the dirty page)
+	- 0/1 Becomes: 0/0*
+	- 1/0 or 1/0* Becomes: 0/0 or 0/0*
+	- 1/1 Becomes: 0/1
+
+#### Sequential Flooding:
+- Page replacement policy can have big impact on # of I/Os. Also, depends on the data access pattern
+- __Sequential flooding__: Nasty situation caused by LRU + repeated sequential scans:
+	- When #buffer frames < #pages in file, means each page request causes an I/O (page fault)
+	- Example: LRU with 8 available buffer frames, read and process pages 1-9 from Table X
+
+#### DBMS vs. OS File System
+OS does disk space & buffer mgmt, so why not let the OS manage these tasks?  
+A DBMS needs to have control over events that most OS’s don’t need to worry about for their own paging activities. Such events include forcing a page to disk, controlling the order of page writes to disk, working with files that span disks, having the ability to control prefetching and page replacement policies based on predictable access patterns, etc.
+
+- Differences in OS support: portability issues
+- Buffer management in DBMS requires ability to:
+	- Pin a page in the buffer pool, or force a page to disk.
+	- Adjust replacement policy, and prefetch pages based on access patterns in typical DB operations.

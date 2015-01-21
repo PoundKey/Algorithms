@@ -47,6 +47,27 @@ To scale differently along the 3 axis directions we can use the more general for
 ### Rotations
 A rotation is a linear transformation that preserves dot products between vectors.
 
+![Sum Formulas](./img/sf.jpg)
+
+__2D rotation__:  
+![Rotation Formulas](./img/rot2.png) ... ... ... ... 
+![Rotation Formulas](./img/rot1.png)
+
+This linear transformation can be written as the following matrix expression:  
+![Rotation Formulas](./img/rot3.png)
+
+__3D Rotation:__  
+ Given c:= cos θ, and s:= sin θ, a rotation of a vector by θ degrees around the z axis of the basis is expressed as:
+
+ ![Rotation Formulas](./img/rot4.png)
+
+ A rotation about the __x-axis__ of a basis can be computed as:
+
+ ![Rotation Formulas](./img/rot5.png)
+
+ A rotation around the __y-axis__ is done using the matrix:
+
+ ![Rotation Formulas](./img/rot6.png)
 
 ### Translations
 
