@@ -69,9 +69,61 @@ __3D Rotation:__
 
  ![Rotation Formulas](./img/rot6.png)
 
-### Translations
+---
+### Points and Frames
+Subtracting one point from another, we should get the motion that it takes to get from the second point to the first one:  
+![Points and Frames](./img/pf.png)  
+Conversely if we start with a point, and move by some vector, we should get to another
+point:  
+![Points and Frames](./img/pf2.png)
 
-### Affine transformations
+Apply a linear transformation to a point: Rotating a point around some other fixed origin point. To represent translations, we need to develop the notion of an __affine__ transform. To accomplish this, we use 4 by 4 matrices. 
+
+#### Frame
+In an affine space, we describe any point p̃ by first starting from some origin point õ, and then adding to it a linear combination of vectors.  
+ ![Points and Frames](./img/pf3.png)
+
+#### Affine frame
+Like a basis, but it is made up of three vectors and a single point.  
+ ![Points and Frames](./img/pf4.png)
+
+ In order to specify a point using a frame, we use a column 4-vector with four entries, with the last entry always being a one. To express a vector using an affine frame, we use a coordinate vector with a 0 as the fourth column.
+
+#### Affine transformations and Four by Four Matrices
+Define a notion of affine transformations on points by placing an appropriate matrix between a coordinate 4- vector and a frame.
+
+__affine matrix__:  
+![Points and Frames](./img/pf5.png)
+
+We apply an affine transform to a point p̃ as follows:  
+![Points and Frames](./img/pf6.png)
+
+Similar to the case of linear transform, we can apply an affine transformation to a frame as:
+
+![Points and Frames](./img/pf7.png)
+
+__Example__: A linear transform is applied to a point. This is accomplished by applying the linear transform to its offset vector from the origin.  
+![Points and Frames](./img/pf8.png)
+
+#### Applying Linear Transformations to Points
+Suppose we have a 3 by 3 matrix representing a linear transformation. we can embed it into the upper left hand corner of a 4 by 4 matrix, and use this larger matrix to apply the transformation to a point (or frame).
+
+![Points and Frames](./img/pf9.png)
+
+If the 3 by 3 matrix is a rotation matrix, this transformation will rotate the point about the origin.
+
+#### Translations
+Translation transformations to points are not linear. The main new power of the affine transforma- tion over the linear transformations is its ability to express translations.  
+In particular, if we apply the transformation:  
+![Points and Frames](./img/at1.png)
+
+we see that its effect on the coordinates is: 
+![Points and Frames](./img/at2.png)
+
+Note that if c has a zero in its fourth coordinate, and thus represents a vector instead of a point, then it is unaffected by translations.
+
+---
+
 
 
 ---

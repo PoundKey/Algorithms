@@ -49,7 +49,7 @@ __Example__:
 #### Solid State Disks (SSDs)
 - Flash memory is based on EEPROMs (e.g., MP3 players, cameras, cell phones)
 - Advantages: No spinning disks or moving parts, lower power requirement and faster reads.
-- Disadvantages: Costy, smaller capacity, slower random writes, limited write cycles (~100000)\
+- Disadvantages: Costy, smaller capacity, slower random writes, limited write cycles (~100000)
 
 #### Ram vs. Disk:
 - About 5 orders of magnitude difference in speeds (nanoseconds vs. milliseconds)
@@ -142,10 +142,18 @@ else:
 	- Example: LRU with 8 available buffer frames, read and process pages 1-9 from Table X
 
 #### DBMS vs. OS File System
-OS does disk space & buffer mgmt, so why not let the OS manage these tasks?  
-A DBMS needs to have control over events that most OS’s don’t need to worry about for their own paging activities. Such events include forcing a page to disk, controlling the order of page writes to disk, working with files that span disks, having the ability to control prefetching and page replacement policies based on predictable access patterns, etc.
+_OS does disk space & buffer mgmt, so why not let the OS manage these tasks?_  
+A DBMS needs to have control over events that most OS’s don’t need to worry about for their own paging activities. Such events include _forcing a page to disk, controlling the order of page writes to disk, working with files that span disks, having the ability to control prefetching and page replacement policies_ based on predictable access patterns, etc.
 
 - Differences in OS support: portability issues
 - Buffer management in DBMS requires ability to:
 	- Pin a page in the buffer pool, or force a page to disk.
 	- Adjust replacement policy, and prefetch pages based on access patterns in typical DB operations.
+
+### IBM DB2
+- Physical objects (files) are tablespaces and indexspaces, they contain pages.
+- A tablespace is a unit of backup and recovery. (There is often one table per tablespace)
+- A view can involve one or more tables, and most views are not stored on disk.
+- DB2 resolves deadlocks by aborting ('Rolling back') the transaction involved in the deadlock that has the fewest log records.
+
+
