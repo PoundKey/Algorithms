@@ -46,8 +46,8 @@ __Memory__: In-place
 - Heapify input array
 - Repeat n times: Perform deleteMin/Max
 
-__Runtime__: О(n<sup>2</sup>) Comparsions  
-__Stability__: Not stable, use index in input array to break down comparison ties. 
+__Runtime__: О(n<sup>lg(n)</sup>)  
+__Stability__: Not stable, use index in input array to break down comparison ties.  
 __Memory__: in-place. (Avoid using another array to store the result)
 
 ### Mergesort

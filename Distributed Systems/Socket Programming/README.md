@@ -3,10 +3,10 @@
 - Sockets are communication points on the same or different computers to exchange data, with OS level support by Unix/Linux/Windows.
 - A process sends and receives through a socket
 - Analogy: the doorway of the house.
-- Socket, as an API, supports the creaGon of network applications
+- Socket, as an API, supports the creation of network applications
 
 ### Socket interface:
-- A collecGon of system calls to write a networking program at user-level.
+- A collection of system calls to write a networking program at user-level.
 - Originally provided in Berkeley UNIX, later adopted by all popular operating systems.
 - In UNIX, everything is like a file, all input is like reading a file, and all output is like writing a file. File is represented by an integer file descriptor.
 - Data written into socket on one host can be read out of socket on other host.
@@ -16,17 +16,25 @@
 - Server: create, bind, listen, accept, read, write, close
 
 ### Socket Parameters:
-__A socket connecGon has 5 general parameters:__
+__A socket connection has 5 general parameters:__
 
 - The protocol (Example: TCP and UDP)
 - The local and remote address (Example: 8.8.8.8)
 - The local and remote port number
 
+### File Descriptor:
+>__Definition__: In C programming, files are represented using file pointers or file descriptors. Generally, a file descriptor is an index for an entry in a kernel-resident array (also called descriptor table) containing the details of open files, and each process has its own file descriptor table. The process passes the file descriptor to the kernel through a system call, and the kernel will access the file on behalf of the process. The process itself cannot read or write the file descriptor table directly.
+
+![File Descriptor Table](img/fdtable.png)
+
+##### A more detailed example:
+![File Descriptor Table](img/fdtable2.png)
+
 ### Typical Client Program
 - Prepare to communicate
 	- Create a socket
 	- Determine server address and port number
-	- IniGate the connecGon to the server
+	- Initiate the connection to the server
 - Exchange data with the server
 	- Write data to the socket
 	- Read data from the socket
@@ -74,15 +82,13 @@ __Sending and Receiving Data__:
 //Sending data
 write(int sockfd, void *buf, size_t len)
 
-• Arguments: socket descriptor, pointer to buffer of data,
-and length of the buffer
-• Returns the number of characters wriUen, and -1 on error
+• Arguments: socket descriptor, pointer to buffer of data, and length of the buffer
+• Returns the number of characters writtien, and -1 on error
 
 //Receiving data
 read(int sockfd, void *buf, size_t len)
 
-• Arguments: socket descriptor, pointer to buffer to place
-the data, size of the buffer
+• Arguments: socket descriptor, pointer to buffer to place the data, size of the buffer
 • Returns the number of characters read (where 0 implies “end of file”), and -1 on error
 
 //Closing the socket
@@ -139,7 +145,7 @@ __Important FuncNons for Server Program__:
  accept()
  - accept incoming connection
 
- read(),write() communicate with client
+ read(), write() communicate with client
 
  close()
  - close the socket descriptor
@@ -164,27 +170,27 @@ int listen(int sockfd, int backlog)
 __Accepting a New Connection__:
 
 ```cpp
-int accept(int sockfd, struct sockaddr *addr, socketlen_t *addrlen
+int accept(int sockfd, struct sockaddr *addr, socketlen_t *addrlen)
 
 • Arguments: socket descriptor, structure that will provide client address and port, and length of the structure
 • Returns descriptor for a new socket for this connection 
 • What happens if no clients are around?
-  - The accept() call blocks waiGng for a client
+  - The accept() call blocks waiting for a client
 • What happens if too many clients are around?
-  - Some connecGon requests don’t get through; that’s okay, because the Internet makes no promises
+  - Some connection requests don’t get through; that’s okay, because the Internet makes no promises
 ```
 
-### Server OperaNon
+### Server Operation
 - The socket returned by accept() is not the same socket that the server was listening on.
 - A new socket, bound to a random port number, is created to handle the connection
-• New socket should be closed when done with communication
-• Initial socket remains open, can still accept more connections
+- New socket should be closed when done with communication
+- Initial socket remains open, can still accept more connections
 
 ### Putting it All Together
 ![Cycle](img/cycle.png)
 
 #### Supporting Function Calls
-- gethostbyname() get address for given host name (e.g. 128.100.3.40 for name “cs.toronto.edu”);
+- gethostbyname() get address for given host name
 - getservbyname() get port and protocol for a given service e.g. ftp, http
 - getsockname() get local address and local port of a socket
 - getpeername() get remote address and remote port of a socket
