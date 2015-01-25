@@ -23,7 +23,9 @@ __A socket connection has 5 general parameters:__
 - The local and remote port number
 
 ### File Descriptor:
->__Definition__: In C programming, files are represented using file pointers or file descriptors. Generally, a file descriptor is an index for an entry in a kernel-resident array (also called descriptor table) containing the details of open files, and each process has its own file descriptor table. The process passes the file descriptor to the kernel through a system call, and the kernel will access the file on behalf of the process. The process itself cannot read or write the file descriptor table directly.
+__Definition__: In C programming, files are represented using file pointers or file descriptors. Each running process has a file descriptor table which contains pointers to all open I/O streams. The process passes the file descriptor to the kernel through a system call, and the kernel will access the file on behalf of the process. The process itself cannot read or write the file descriptor table directly.
+
+When a process starts, three entries are created in the first three cells of the table. Entry 0 points to standard input, entry 1 points to standard output, and entry 2 points to standard error. Whenever a file is opened, a new entry is created in this table, usually in the first available empty slot. The socket system call returns an entry into this table; i.e. a small integer. This value is used for other calls which use this socket. The accept() system call returns another entry into this table. The value returned by accept() is used for reading and writing to that connection.
 
 ![File Descriptor Table](img/fdtable.png)
 
