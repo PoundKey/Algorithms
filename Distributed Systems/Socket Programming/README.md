@@ -197,7 +197,7 @@ int accept(int sockfd, struct sockaddr *addr, socketlen_t *addrlen)
 - getsockname() get local address and local port of a socket
 - getpeername() get remote address and remote port of a socket
 
-#### Userful Structures
+#### Useful Structures
 ```cpp
 // Generic address, “connect(), bind(), accept()” <sys/socket.h>
 struct sockaddr { 
@@ -207,7 +207,7 @@ struct sockaddr {
 
 // Client and server addresses TCP/UDP address (includes port #) <netinet/in.h>
 struct sockaddr_in { 
-	u_short sa_family; 
+	u_short sa_family; /* should be AF_INET */
 	u_short sin_port;
 	struct in_addr sin_addr; 
 	char sin_zero[8];
@@ -217,11 +217,22 @@ struct sockaddr_in {
 struct in_addr {
 	u_long s_addr; 
 };
+
+// Host name
+struct  hostent {
+  char    *h_name;        /* official name of host */
+  char    **h_aliases;    /* alias list */
+  int     h_addrtype;     /* host address type */
+  int     h_length;       /* length of address */
+  char    **h_addr_list;  /* list of addresses from name server */
+  #define h_addr  h_addr_list[0]  /* address, for backward compatiblity */
+};
+
 ```
 
-#### Userful Libraries
+#### Useful Libraries
 ```cpp
-// Convert between system’s representaGon of IP addresses and readable strings (e.g.“128.100.3.40 ”)
+// Convert between system’s representaGon of IP addresses and readable strings
 unsigned long inet_addr(char* str);
 char * inet_ntoa(struct in_addr inaddr);
 
