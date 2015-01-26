@@ -1,6 +1,6 @@
 # Stable Matching Problem
 ### Definitions
-__Perfect matching__: So consider a set M = {mx<sub>1</sub>, . . . , mx<sub>n</sub>} of n men, and a set W = {w<sub>1</sub>, . . . , w<sub>n</sub>} of n women. A matching S is a set of ordered pairs, each from M × W, with the property that each member of M and each member of W appears in __at most__ one pair in S. (each man and each woman belong to at most one of the ordered pairs.) A perfect matching S′ is a matching with the property that each member of M and each member of W appears in __exactly one__ pair in S′. (each man and each woman belong to exactly one of the ordered pairs.)
+__Perfect matching__: So consider a set M = {m<sub>1</sub>, . . . , m<sub>n</sub>} of n men, and a set W = {w<sub>1</sub>, . . . , w<sub>n</sub>} of n women. A matching S is a set of ordered pairs, each from M × W, with the property that each member of M and each member of W appears in __at most__ one pair in S. (each man and each woman belong to at most one of the ordered pairs.) A perfect matching S′ is a matching with the property that each member of M and each member of W appears in __exactly one__ pair in S′. (each man and each woman belong to exactly one of the ordered pairs.)
 
 __Instability__: There are two pairs (m,w) and (m′,w′) in S with the property that m prefers w′ to w, and w′ prefers m to m′. We’ll say that such a pair (m, w′) is an instability with respect to S.
 
@@ -22,6 +22,9 @@ Return the set S of engaged pairs
 ```
 __Truth__: Gale-Shapley algorithm returns a stable and perfect matching.
 
+__Observation 1__: The woman never becomes free once she is engaged, and never to someone she likes less than the current man who she is with. Thus, the quality of her fiances improve monotonically.
+
+
 - - -
 ### Example
 ```python
@@ -36,6 +39,10 @@ __Question__: Do all executions of the G-S algorithm yield the same matching? <b
 Yes, All Executions Yield the Same Matching
 
 ---
+
+### Proof Table:
+![Proof Table](img/tact.png)
+
 __Fact__:
 > The G-S algorithm terminates after at most n<sup>2</sup> iterations of the While loop.
 
