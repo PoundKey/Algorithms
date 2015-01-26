@@ -33,7 +33,7 @@ QED
 - Example of running time:
 	- T(n) =  4n + 5
 	- T(n) = 0.5nlog(n) - 2n + 7
-	- T(n) = 2^n + n^3 + 3n
+	- T(n) = 2<sup>n</sup> + n<sup>3</sup> + 3n
 
 ![Rate of Growth](./img/rate.png)
 
@@ -44,6 +44,21 @@ QED
 
 #### Big-Omega and Big-Theta Notation
 ![Big Omega Theta](./img/bigt.png)
+
+#### Little-Omega and Little-Theta Notation
+![Little Omega Theta](./img/smallo.png)
+
+#### Limits and Asymptotic Notation
+![Limits and Asymptotic Notation](./img/lim.png)
+
+__Note__: if f ∈ o(g), then f ∈ O(g), g ∈ ω(f) and g ∈ Ω(f). 
+
+### Asymptotic Notations (Growth Rate)
+- If we say that f(n) ∈ O(g(n)), we mean that the rate of growth of f(n) is less than or equal to (≤) the rate of growth of g(n).
+- If we say that f(n) ∈ Θ(g(n)), we mean that the rate of growth of f(n) is equal (=) to the rate of growth of g(n).
+- If we say that f(n) ∈ Ω(g(n)), we mean that the rate of growth of f(n) is greater than or equal to (≥) the rate of growth of g(n).
+- If we say that f(n) ∈ o(g(n)), f(n) is in little-o of g(n), and we mean that f(n) grows strictly slower than g(n). This is analogous to using < to compare two functions.
+- If we say that f(n) ∈ ω(g(n)), f(n) is in little-omega of g(n), and we mean that f(n) grows strictly faster than g(n). This is analogous to using > to compare two functions.
 
 ### L’Hospital’s Rule
 ![L’Hospital’s Rule](./img/lhrule.png)
@@ -242,6 +257,15 @@ Solution: Θ(nlog(n))
 	- T(2) = b
 	- T(n) = T(n-1) + T(n-2) + c
 	- T(n) = O(2<sup>n</sup>)
+
+
+#### Problem that cannot be expressed using asymptotic notations
+Consider the following functions:
+
+- f(n) = 1 if n is odd; f(n) = n if n is even.
+- g(n) = n if n is odd; g(n) = 1 if n is even.
+
+Such non-monotonic functions exist in applications such as prime number checking. The graphs of these functions look like upside-down Vs which expand as n increases. We cannot say that f(n) ∈ O(g(n)) because this would fail for even-valued n. Likewise, we cannot say that f(n) ∈ Ω(g(n)) because this would fail for odd valued n.
 
 ### Log Aside
 ![Log Aside](./img/log.png)
