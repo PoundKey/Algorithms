@@ -30,6 +30,7 @@
 - Details stored in an auxiliary image called a texture.
 - Traingles <=> Textures map to form graphics
 
+---
 ### Linear Transformations (Representations)
 The operation of the linear transformation operating on a vector can be expressed as:
 
@@ -123,8 +124,37 @@ we see that its effect on the coordinates is:
 Note that if c has a zero in its fourth coordinate, and thus represents a vector instead of a point, then it is unaffected by translations.
 
 ---
+### The Frame Is Important
+In computer graphics we simultaneously keep track of a number of different frames. For example, we may have a different frame associated with each object in the scene. Suppose we specify a point and a transformation matrix, this does not fully specified the actual mapping. We must also specify what frame we are using. 
 
+![Points and Frames](./img/frm1.png)
 
+![Points and Frames](./img/frm2.png)
+
+#### Transforms Using an Auxiliary Frame
+There are many times when we wish to transform a frame ⃗ f<sup>t</sup> in some specific way represented by a matrix M, with respect to some auxiliary frame ⃗a<sup>t</sup>. We never alter the world frame.
+
+![Points and Frames](./img/frm3.png)
+
+![Points and Frames](./img/frm4.png)
+
+__Note__: The point is transformed with respect to the the frame that appears immediately to the left of the transformation matrix in the expression. Thus we call this _the left of rule_.
+
+### Multiple Transformations
+In general, matrix multiplication is not commutative. 
+
+![Points and Frames](./img/frm5.png)
+
+![Points and Frames](./img/frm6.png)
+
+---
+
+### World, Object and Eye Frames
+When describing the geometry of a scene, we start with a basic right handed orthonormal frame w⃗ <sup>t</sup> called the world frame. 
+
+To every object in the scene we associate an right handed orthonormal object frame ⃗o<sup>t</sup>. We can now express the location of parts of the objects using coordinates with respect to the object’s coordinate system. These are called object coordinates and will be stored in our computer program. To move the entire object, we simply update ⃗o<sup>t</sup> and do not need to change any of the object coordinates of our points.
+
+![Points and Frames](./img/afm1.png)
 
 ---
 ### Linear Algebra
@@ -219,7 +249,12 @@ __Note__: Can be also viewed as linear combination or span( v<sub>1</sub>, v<sub
 
 ![Identity Matrix](http://upload.wikimedia.org/math/6/1/5/615ac6f1328ce0a67b46b5e4cbb121af.png)
 
-The __inverse__ of a matrix M is the unique matrix M<sup>−1</sup> with the property M M<sup>−1</sup> = M<sup>−1</sup>M = I.
+The __inverse__ of a matrix M is the unique matrix M<sup>−1</sup> with the property M M<sup>−1</sup> = M<sup>−1</sup>M = I.  
+Given a<sup>t</sup> and b<sup>t</sup> are row basis:
+
+![Inverse Function](img/invs.png)
+
+![Inverse Function](img/invs2.png)
 
 ---
 Let V be a R-vector space and v<sub>1</sub>,...,v<sub>k</sub> ∈ V. If v<sub>k</sub> is in the span of v<sub>1</sub>, ..., v<sub>k-1</sub>, then:  

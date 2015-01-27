@@ -46,7 +46,7 @@ __Memory__: In-place
 - Heapify input array
 - Repeat n times: Perform deleteMin/Max
 
-__Runtime__: О(n<sup>lg(n)</sup>)  
+__Runtime__: О(n lg(n) )  
 __Stability__: Not stable, use index in input array to break down comparison ties.  
 __Memory__: in-place. (Avoid using another array to store the result)
 
