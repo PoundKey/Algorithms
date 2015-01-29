@@ -1,4 +1,5 @@
 # CPSC 416 Distributed Systems
+> A __distributed system__ is an application that executes a collection of protocols to coordinate the actions of multiple processes on a network, such that all components cooperate together to perform a single or small set of related tasks.
 
 #### Pitfalls when Developing Distributed Systems
 1. The network is reliable.

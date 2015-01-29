@@ -156,4 +156,9 @@ A DBMS needs to have control over events that most OS’s don’t need to worry 
 - A view can involve one or more tables, and most views are not stored on disk.
 - DB2 resolves deadlocks by aborting ('Rolling back') the transaction involved in the deadlock that has the fewest log records.
 
+### System Catalog
+- A description of the contents of a database, maintained by the DBMS.
+
+### Store Record
+
 
