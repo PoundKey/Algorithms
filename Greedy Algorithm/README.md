@@ -56,3 +56,27 @@ __Psudo Code__:
 	- Assign job i to the time interval from s(i) = f to f(i) = f + t<sub>i</sub> 
 	- Let f = f + t<sub>i</sub>
 - Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
+
+## The Minimum Spanning Tree Problem.
+Kruskal’s Algorithm
+
+## Example
+Consider the problem of making change for n cents, using the least number of coins. The input to this problem is the integer n, and the output is a sequence of coin values (where each value is allowed to appear multiple times) whose sum adds up to n. Describe a greedy algorithm to make change consisting of quarters (25 cents), dimes (10 cents), nickels (5 cents) and pennies (1 cent, a blast from the past).
+
+```python
+# Num is floored to int
+
+quarterNum = amount/25
+amount = amount % 25
+
+dimeNum = amount/10
+amount = amount % 10
+
+nickelNum = amount/5
+pennyNum = amount % 5
+```
+__Note__: If we had coins worth 25, 12, 5 and 1 cents, then the greedy algorithm would make change for 29 cents as 25 + 1 + 1 + 1 + 1 (5 coins) instead of 12 + 12 + 5 (3 coins) and so it would not always return the solution with the fewest coins.  
+So, coins set must have common factors (5 and 1 in previous case) in order to optimize the greedy algorithm.
+
+### Exhibition Guarding Problem
+// todo
