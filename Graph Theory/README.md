@@ -8,6 +8,8 @@ A graph G = (V , E) has two natural input parameters, the number of nodes
 #### Directed graph:
 A directed graph G′ consists of a set of nodes V and a set of directed edges E′. Each e′ ∈ E′ is an ordered pair (u, v); in other words, the roles of u and v are not interchangeable, and we call u the tail of the edge and v the head. We will also say that edge e′ leaves node u and enters node v.
 
+A directed graph is strongly connected if, for every two nodes u and v, there is a path from u to v and a path from v to u. We also define two nodes u and v in a directed graph are __mutually reachable__ if there is a path from u to v and also a path from v to u.
+
 #### Undirected graph:
 An undirected graph is graph that a set of nodes are connected together, where all the edges are bidirectional. In contrast, a graph where the edges point in a direction is called a directed graph.
 
@@ -62,6 +64,11 @@ _Undirected graph, adjacency list representation_:
 
 > The adjacency matrix representation of a graph requires O(n<sup>2</sup>) space, while the adjacency list representation requires only O(m + n) space.
 
+- For a simple graph (no double edges) E ≤ V<sup>2</sup> = O(V<sup>2</sup>) 
+- For a connected graph E ≥ V − 1
+- For a completed graph E = V(V-1)/2
+- For a tree E = V − 1
+
 ---
 ### Articulation Point and Diameter
 __An articulation point__ in an undirected graph is a vertex whose removal increases the number of connected components in the graph. Intuitively: Consider a node in a graph. If removing that node and all edges incident on that node 􏰀breaks􏰁 the graph into pieces, then the node is an articulation point.
@@ -69,5 +76,13 @@ __An articulation point__ in an undirected graph is a vertex whose removal incre
 The __diameter__ of an undirected, unweighted graph is the largest possible value of the following quantity: the smallest number of edges on any path between two nodes. In other words, it's the largest number of steps required to get between two nodes in the graph.
 
 ### Breadth-First Search
+- Discover vertices in order of distance from the source.
+- Works for undirected and directed graphs.
 
 ### Depth-First Search
+![DFS](./img/dfs.png)
+
+__Stack Implementation__:
+![DFS](./img/dfstack.png)
+
+Depth First Traversal can be used to detect cycle in a Graph. DFS for a connected graph produces a tree. There is a cycle in a graph only if there is a back edge present in the graph. A back edge is an edge that is from a node to itself (selfloop) or one of its ancestor in the tree produced by DFS.

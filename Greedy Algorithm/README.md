@@ -57,6 +57,14 @@ __Psudo Code__:
 	- Let f = f + t<sub>i</sub>
 - Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 
+## Optimal Caching: Exchange Argument
+
+For caching to be as effective as possible, it should generally be the case that when you go to access a piece of data, it is already in the cache. To achieve this, a cache maintenance algorithm determines what to keep in the cache and what to evict from the cache when new data needs to be brought in.
+
+![Cache Algorithm](img/cache.png)
+
+__Farthest-in-Future Algorithm__: When d<sub>i</sub> needs to be brought into the cache, evict the item that is needed the farthest into the future
+
 ## The Minimum Spanning Tree Problem.
 Kruskal’s Algorithm
 
