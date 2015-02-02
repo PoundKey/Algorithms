@@ -86,3 +86,29 @@ __Stack Implementation__:
 ![DFS](./img/dfstack.png)
 
 Depth First Traversal can be used to detect cycle in a Graph. DFS for a connected graph produces a tree. There is a cycle in a graph only if there is a back edge present in the graph. A back edge is an edge that is from a node to itself (selfloop) or one of its ancestor in the tree produced by DFS.
+
+### Minimum Edge Cover􏰞 Problem
+Input is a connected, undi- rected graph G = (V, E) with |V | ≥ 2, and the output is the smallest possible set E′ such that E′ ⊆ E and for all vertices v ∈ V , there is an edge (v,u) in E′. That is, every vertex in the graph is the endpoint of some edge in E′.
+
+Formally, an edge cover of a graph G is a set of edges E' such that each vertex in G is incident with at least one edge in E'. The set E' is said to cover the vertices of G. 
+
+(最小覆盖边：一句话，就是用最少的边覆盖所有的点)
+
+#### Pseudocode
+```python
+G(V, E)   //assumed stored in adjacency list
+let S = V
+let E' = {}
+
+for v in S:
+	calculate total number of edges incident to v, label as e 
+
+sort S increasely with value e 
+while (S is not empty):
+	choose v in S with the smallest value e 
+	foreach node connected to v:
+		u = the node with the smallest e
+	add (v, u) to E'
+	remove v, u from S
+return E'
+```

@@ -1,6 +1,17 @@
 # Greedy Algorithm
 __Definition__: We consider an algorithm to be greedy if the algorithm builds a solution one step at a time, using a simple, local criterion. Graph algorithms such as _Djikstra’s shortest path algorithm_ or _Kruksal’s minimum spanning tree algorithm_ are considered to be greedy algorithms.
 
+## Design Greedy Algorithm
+__Things to think__:
+
+- __Step 1__:Think greedy! What attribute about the input of the problem that will make you greedy?
+	- e.g., In a beauty pageant, some people like beautiful faces, some people care about long legs, and some people... right :)?
+- __Step 2__: Being greedy! Choose the best regarding to the attribute among all selections, one by one.
+- __Step 3__: Moving on! Don't Regret, and don't look back. Your choices may not be everyone's preference, but it's definitely your favorite.
+
+
+
+---
 __Problem__: We are given a set of intervals I = i<sub>1</sub> , i<sub>2</sub>, ..., i<sub>n</sub> , each of which has a beginning and an ending time. We say that intervals i<sub>m</sub> and i<sub>n</sub> are compatible if i<sub>m</sub> ∩ in<sub>n</sub> = ∅, that is, no period of time in i<sub>m</sub>  and i<sub>n</sub> overlaps.
 
 ![Interval Scheduling](../Classic Problems Preview/img/inv.png)
@@ -65,8 +76,8 @@ For caching to be as effective as possible, it should generally be the case that
 
 __Farthest-in-Future Algorithm__: When d<sub>i</sub> needs to be brought into the cache, evict the item that is needed the farthest into the future
 
-## The Minimum Spanning Tree Problem.
-Kruskal’s Algorithm
+## The Minimum Spanning Tree Problem
+[Kruskal’s Algorithm](https://github.com/PoundKey/Algorithm/blob/master/Graph%20Algorithms%20/README.md)
 
 ## Example
 Consider the problem of making change for n cents, using the least number of coins. The input to this problem is the integer n, and the output is a sequence of coin values (where each value is allowed to appear multiple times) whose sum adds up to n. Describe a greedy algorithm to make change consisting of quarters (25 cents), dimes (10 cents), nickels (5 cents) and pennies (1 cent, a blast from the past).

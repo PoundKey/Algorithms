@@ -32,6 +32,15 @@ When a process starts, three entries are created in the first three cells of the
 ##### A more detailed example:
 ![File Descriptor Table](img/fdtable2.png)
 
+### Protocol Suites or Protocol Families: TCP/IP 
+TCP/IP provides end-to-end connectivity specifying how data should be:
+
+- formatted
+- addressed
+- transmitted
+- routed
+- received at the destination
+
 ### Typical Client Program
 - Prepare to communicate
 	- Create a socket
