@@ -39,8 +39,21 @@ Recurse(right)
 Visit(root)
 # Result: 2, 7, 9, 5, 17, 30, 20, 1
 ```
+![Binary Tree](img/fnode.png)
+
+![Binary Tree](img/fnode2.png)
+
+### BST Insertion
+![Binary Tree](img/binsert.png)
+
+__Runtime__:
+
+- Worst case: Θ(n<sup>2</sup>)
+- Average case: Θ(n log n) (assuming all orderings equally likely)
 
 ---
-## B+ Tree
+![Binary Tree](img/suc.png)
 
-## B- Tree
+![Binary Tree](img/pre.png)
+
+### BST Deletion
