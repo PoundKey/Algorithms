@@ -161,4 +161,63 @@ A DBMS needs to have control over events that most OS’s don’t need to worry 
 
 ### Store Record
 
+---
+### Disk Service Time (to Fetch Pages)
+- DBMSs read and write disk pages frequently
+- The fact that you request disk page p does not necessarily mean that you’ll get service quickly
+- Reasons:
+	- Contention, including nearly simultaneous requests many DB users or processes.
+	- Disk scheduling
+
+### Disk Scheduling Algorithms
+Simultaneou Pages Requests: cyl. 1400, 2500, 170, 160, 161, 3500, 162
+
+- FCFS: First Come, First Served: 1400, 2500, 170, 160, 161, 3500, 162
+- SSTF: Shortest Seek Time First: 162, 161, 160, 170, 1400, 2500, 3500
+	- Minimization of total head travel time
+ 
+__Example 2__: Assume we’re on cyl. 165, having just come from cyl. 164, and now we get the following requests: 1400, 2500, 170, 160, 161, 3500, 162
+
+- Elevator Algorithm
+	- “Scan with (or without) Look” option
+	- “Look” means only go as far as needed (elevator analogy: don’t go to the extreme floors unless a user request has been made).
+	- Service Order: 170, 1400, 2500, 3500, 162, 161, 160
+
+What is the service order if, while servicing cyl. 1400, we get these new requests: 1250, 1400, and 1500?
+
+- Service Order: 170, 1400, 1400, 1500, 2500, 3500, 1250, 162, 161, 160
+
+### Record Formats: Fixed Length
+![Record Fixed Length](img/rfix.png)
+
+- The information about field types is the same for all records in the table.
+- Schema info (column names, data types, lengths, order) is stored in the DBMS’s __catalog__.
+- Finding the i’th field does not require scanning the whole record
+
+## Indexes
+
+### Introduction
+- We can retrieve records by:
+	- Scanning all records in a file sequentially, or
+	- Specifying the rid (record ID), if known
+- Sometimes we want to retrieve records by specifying the values in one or more fields. For example:
+	- Find the name of the student with student ID 86753091.
+	- Find all 1st year students with the last name “Lee”.
+	- Find all 4th year students in the CPSC department who have not taken CPSC 304.
+- __Indexes__ are __file structures__ that enable us to answer such value-based queries efficiently.
+
+- On the one hand, we want to keep as much data as possible about an entity 
+- On the other hand, we want good performance.
+- Two major categories of indexes:
+	- Tree-structured indexes
+	- Hash index structures
+
+- For any index, there are 3 alternatives for storing data entries k*, whose search key is k:
+	- Whole data record with search key value k
+	- <k, rid of data record (on disk) with search key value k>
+	- <k, list of rids of data records with search key k>
+- Tree-structured indexing techniques support both range searches and equality searches.
+- B+ tree: A dynamic, balanced tree structure
+	- Adjusts gracefully for insertions and deletions
+	- Skew is generally not an issue.
 

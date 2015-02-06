@@ -3,9 +3,7 @@
 ## The Shortest Path Problem
 ### Djikstra’s Algorithm
 ### Introduction
-- An algorithm run on a weighted graph
-- Starts with an initial node and a destination node
-- Finds the least cost path to the destination node
+![Djikstra’s Algorithm](img/dli.png)
 
 ### Steps
 1. Assign to every node a tentative distance value: zero for initial node and infinity to all other nodes
@@ -17,6 +15,8 @@ _e_ = __(distance_to_current_node + distance_from_current_to_neighbor)__
 6. Set the current node as the next unvisited node with the __smallest__ tentaive distance.
 7. If the destination node has been marked visited, the algorithm finishes.
 8. Else go back to step 3.
+
+![Djikstra’s Algorithm](img/dk.png)
 
 ![Djikstra’s Algorithm](img/djikstra.gif)
 ### Pseudocode
@@ -42,6 +42,8 @@ return dist													# (if desired, add traceback code)
 __Runtime__: Using a binary heap, __O( |E| + |V|log|V| )__
 
 __Space__: Using a binary heap, __O( |V| )__, up to |V| vertices may have to be stored.
+
+![Djikstra’s Algorithm](img/cloudp.png)
 
 ---
 ## The Minimum Spanning Tree Problem
