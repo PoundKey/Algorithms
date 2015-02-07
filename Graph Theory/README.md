@@ -150,3 +150,12 @@ A topological sort is a total order of the vertices of a graph G = (V,E) such th
 - __Runtime__: Θ(n + m)
 - __Note__: n = vertices, m = edges: m ∈ O (n<sup>2</sup>)
 
+---
+![Minimum Spanning Tree](img/spant.png)
+
+![Minimum Spanning Tree](img/krusal.png)
+
+![Minimum Spanning Tree](img/kexe.png)
+
+![Minimum Spanning Tree](img/proof.png)
+
