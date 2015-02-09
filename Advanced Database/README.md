@@ -159,8 +159,6 @@ A DBMS needs to have control over events that most OS’s don’t need to worry 
 ### System Catalog
 - A description of the contents of a database, maintained by the DBMS.
 
-### Store Record
-
 ---
 ### Disk Service Time (to Fetch Pages)
 - DBMSs read and write disk pages frequently
@@ -187,7 +185,10 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 
 - Service Order: 170, 1400, 1400, 1500, 2500, 3500, 1250, 162, 161, 160
 
-### Record Formats: Fixed Length
+## Record Formats & Store Records
+
+- We can think of a page as a collection of __slots__, each of which contains a record. A record is identified by using the pair (page id, slot number); this is the record id (rid).
+
 ![Record Fixed Length](img/rfix.png)
 
 - The information about field types is the same for all records in the table.
