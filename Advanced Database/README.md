@@ -188,16 +188,44 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 ## Record Formats & Store Records
 
 - We can think of a page as a collection of __slots__, each of which contains a record. A record is identified by using the pair (page id, slot number); this is the record id (rid).
+- If all records on the page are guaranteed to be of the __same__ length, record slots are uniform and can be arranged consecutively within a page.
+- __Fixed Record__: Using an array of bits, one per slot, to keep track of free slot information. Locating records on the page requires scanning the bit array to find slots whose bit is on; when a record is deleted, its bit is turned off.
 
+![Record Fixed Length](img/fixrc.png)
+
+---
+- If records are of __variable length__, then we cannot divide the page into a fixed collection of slots. 
+- when a record is inserted, we must allocate just the right amount of space for it, and when a record is deleted, we must move records to fill the hole created by the deletion, in order to ensure that all the free space on the page is contiguous.
+- The most flexible organization for variable-length records is to maintain a __directory of slots__ for each page, with a ⟨record offset, record length⟩ pair per slot.
+- __Record offset__: the offset in bytes from the start of the data area on the page to the start of the record.
+- Deletion is readily accomplished by setting the record offset to -1.
+- Record id (rid) does not change when the record is moved; only the record offset stored in the slot changes.
+- One way to manage free space is to maintain a pointer (that is, offset from the start of the data area on the page) that indicates the start of the free space area. 
+- When a new record is too large to fit into the remaining free space, we have to move records on the page to reclaim the space freed by records that have been deleted earlier. The idea is to ensure that after reorganization, all records appear __contiguously__, followed by the available free space.
+- A subtle point to be noted is that the slot for a deleted record cannot always be removed from the slot directory (except the last slot on current data page).
+- When a record is inserted, the slot directory should be scanned for a slot that currently does not point to any record, and this slot should be used for the new record.
+- A new slot is added to the slot directory only if all existing slots point to records.
+
+![Record Var Length](img/varr.png)
+
+---
 ![Record Fixed Length](img/rfix.png)
 
-- The information about field types is the same for all records in the table.
-- Schema info (column names, data types, lengths, order) is stored in the DBMS’s __catalog__.
-- Finding the i’th field does not require scanning the whole record
+- __Fixed-Length Records__:
+	- The information about field types is the same for all records in the table.
+	- Schema info (column names, data types, lengths, order) is stored in the DBMS’s __catalog__.
+	- Finding the i’th field does not require scanning the whole record
+- __Variable-Length Records__:
+	- Option 1: Store fields consecutively, separated by delimiters, requires a scan of the record in order to locate a desired field.
+	- Option 2: Reserve some space at the beginning of a record for use as an array of integer offsets—the ith integer in this array is the starting address of the ith field value relative to the start of the record. 
+		- we also store an offset to the end of the record; this offset is needed to recognize where the last field ends.
+		- If a field contains a null value, the pointer to the end of the field is set to be the same as the pointer to the beginning of the field
+
+![Record Var Length](img/varc.png)
 
 ## Indexes
-
 ### Introduction
+- Indexes are auxiliary structures that support efficient retrieval of records based on the values of a search key. 
 - We can retrieve records by:
 	- Scanning all records in a file sequentially, or
 	- Specifying the rid (record ID), if known
