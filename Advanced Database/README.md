@@ -156,8 +156,20 @@ A DBMS needs to have control over events that most OS’s don’t need to worry 
 - A view can involve one or more tables, and most views are not stored on disk.
 - DB2 resolves deadlocks by aborting ('Rolling back') the transaction involved in the deadlock that has the fewest log records.
 
+---
 ### System Catalog
-- A description of the contents of a database, maintained by the DBMS.
+- A fundamental property of a database system is that it maintains a description of all the data that it contains.
+- A relational DBMS maintains information about every relation and index that it contains.
+- __System catalog content__: 
+	- The size of the buffer pool and the page size, 
+	- Relation name, the attribute name and type of each of its attributes.
+	- The index name and structure of each index on the relation. 
+	- The integrity constraints (e.g., primary key and foreign key constraints) 
+- Statistics about relations and indexes are stored in the system catalogs and updated periodically.
+- The catalogs also contain information about users, such as accounting information and authorization information (e.g., Joe User can modify the Enrolled relation, but only read the Faculty relation).
+- A relational DBMS is that the system catalog is itself a collection of relations. 
+
+![Catalog](img/catalog.png)
 
 ---
 ### Disk Service Time (to Fetch Pages)
@@ -235,18 +247,103 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 	- Find all 4th year students in the CPSC department who have not taken CPSC 304.
 - __Indexes__ are __file structures__ that enable us to answer such value-based queries efficiently.
 
-- On the one hand, we want to keep as much data as possible about an entity 
+- On the one hand, we want to keep as much data as possible about an entity.
 - On the other hand, we want good performance.
 - Two major categories of indexes:
 	- Tree-structured indexes
 	- Hash index structures
-
 - For any index, there are 3 alternatives for storing data entries k*, whose search key is k:
 	- Whole data record with search key value k
-	- <k, rid of data record (on disk) with search key value k>
-	- <k, list of rids of data records with search key k>
+	- ( k, rid of data record (on disk) with search key value k )
+	- ( k, list of rids of data records with search key k )
 - Tree-structured indexing techniques support both range searches and equality searches.
 - B+ tree: A dynamic, balanced tree structure
-	- Adjusts gracefully for insertions and deletions
+	- Adjusts well to changes and supports both equality and range queries.
 	- Skew is generally not an issue.
+
+---
+## B+ Tree
+- In B+ trees every node contains m entries, where d ≤ m ≤ 2d. The value d is a parameter of the B+ tree, called the __order__ of the tree. For the root it is simply required that 1 ≤ m ≤ 2d.
+- Non-leaf nodes with m index entries contain m + 1 pointers to children.
+- __B+ Trees in Practice__: 
+	- Typical order: 100. Typical fill-factor: 67%
+	- Average fanout = 133
+	- Typical capacities: Height 4: 133<sup>4</sup> = 312,900,700 records, Height 3: 133<sup>3</sup> = 2,352,637 records
+- (Unique) Search, Insert, or Delete is O(log<sub>F</sub> N), where F = fanout and N = # leaf pages (or roughly the total # of leaf + internal pages). 
+
+### Insertion
+- Find correct leaf L.
+- Put data entry onto L.
+	- If L has enough space, done!
+	- Else, must split L (into L and a new node L2)
+		- Redistribute entries evenly, copy up middle key.
+		- Insert index entry pointing to L2 into parent of L.
+
+### Deletion
+- Start at root, find leaf L where entry belongs
+- Remove the entry
+	- If L is at least half-full, done!
+	- If L has only d-1 entries,
+		- Try to re-distribute, borrowing from sibling (adjacent node with same parent as L)
+		- If re-distribution fails, merge L and sibling
+- If merge occurred, must delete entry from parent of L
+- Merge could propagate to root, decreasing height
+
+### Bulk-Loading a B+ Tree
+- For creating a B+ tree index on an existing collection of data records.
+- Initialization: Sort all data entries, insert pointer to first (leaf) page in a new (root) page
+
+![Bulk Loading](img/bulk.png)
+
+### Prefix Key Compression
+- Key compression increases fanout, reduces height
+- Key values in index entries only ’direct traffic’; but often, we can compress them.
+- e.g., If we have adjacent index entries with search key values Danielle Miller, David Smith and Deepak Murthy, we can abbreviate David Smith to Dav
+- If there is a data entry Davey Jones, we can only compress David Smith to Davi
+- In general, while compressing, must leave each index entry greater than every key value (in any subtree) to its left
+- Index entries for leaf pages always entered into right-most index page just above leaf level. When this fills up, it splits.
+- Much faster than repeated inserts, especially when one considers locking!
+- Non-bulk approach: Multiple SQL INSERT statements
+	- Slow, and does not give sequential storage of leaves.
+	- Lots of locking overhead.
+	- Lots of log records can be generated when loading a table via INSERT statements!
+
+### Dulpications
+- Some indexes may have a lot of duplicates, and can be handled via:
+	- Overflow pages
+	- Alternative 3 indexes
+	- Concatenating the key and the rid, and then treating this combination as a unique key (Alternative 2)
+
+---
+## Hash Based Indexing
+- Hash-based indexes are usually the best choice for equality selections.
+- No traversal of trees and direct computation of where k* should be
+- The __Extendible Hashing__ scheme uses a directory to support inserts and deletes efficiently without any overflow pages.
+- The __Linear Hashing__ scheme uses a clever policy for creating new buckets and supports inserts and deletes efficiently without the use of a directory.
+
+### Static Hashing
+
+- The pages containing the data can be viewed as a collection of __buckets__, with one primary page and possibly additional overflow pages per bucket.
+- # primary pages fixed, allocated sequentially, never de-allocated; overflow pages, if needed.
+- To search for a data entry, we apply a hash function h to identify the bucket to which it belongs and then search this bucket.
+- To insert a data entry, we use the hash function to identify the correct bucket and then put the data entry there. 
+- If there is no space for this data entry, we allocate a new overflow page, put the data entry on this page, and add the page to the overflow chain of the bucket. 
+
+![Hashing](img/statich.png)
+
+### Extendible Hashing
+- Doubling the total number of buckets, but reading and writing all pages is expensive (slow)!
+- __Idea__: use a directory of pointers to buckets, and double the size of the number of buckets by doubling just the directory and splitting only the bucket that overflowed.
+- The directory is much smaller than the file; so, doubling it is much cheaper.
+- Global depth of directory: Max # of bits needed to tell which bucket an entry belongs to
+- Local depth of a bucket: # of bits used to determine if an entry belongs to this bucket
+- Before insertion, suppose the local depth of the bucket = the global depth. The insertion will cause local depth to become > global depth; therefore, the directory is doubled by copying it and adjusting the pointers to the appropriate pages.
+- If the directory already exists in memory, an equality search is answered with one disk access; otherwise, two.
+
+![Hashing](img/extend.png)
+
+![Hashing](img/extend2.png)
+
+![Hashing](img/extend3.png)
+
 
