@@ -346,4 +346,30 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 
 ![Hashing](img/extend3.png)
 
+### Linear Hashing
+- Another dynamic hashing scheme - an alternative to Extendible Hashing.
+- LH handles the potential problem of long overflow chains without using a directory; and handles duplicates in a nice way.
+- __Idea__: Use a family of hash functions h<sub>0</sub>, h<sub>1</sub>, h<sub>2</sub>, ... to map the key to the appropriate bucket:
+	 - h<sub>i</sub>(key) = h(key) mod(2<sup>i</sup> N); N = initial # buckets
+	 - h<sub>0</sub> handles the case with N buckets
+	 - h<sub>1</sub> handles the case with 2N buckets
+	 - h<sub>2</sub> handles the case with 4N buckets
+- h<sub>i+1</sub> doubles the range of h<sub>i</sub> (similar to directory doubling)
+- Directory avoided in LH by using overflow pages, and choosing bucket to split round-robin.
+- Splitting proceeds in ‘rounds’. Round ends when all N<sub>R</sub> initial (for round R) buckets are split. 
+- Buckets 0 to Next-1 have been split; Next to N<sub>R-1</sub> are yet to be split.
+- Current round number is __Level__
+- __Search__: To find bucket for data entry r, find h<sub>Level</sub>(r):
+	-  If h<sub>Level</sub>(r) in range ‘Next to N<sub>R</sub> – 1 ’ , r belongs here
+	- Else, r belongs to either bucket h<sub>Level</sub>(r) or bucket h<sub>Level</sub>(r) + N<sub>R</sub>; must apply h<sub>Level+1</sub>(r) to find out which
+
+- __Insert__: Find bucket by applying h<sub>Level</sub> / h<sub>Level+1</sub> :
+	- If bucket to insert into is full:
+		- Add overflow page and insert data entry
+		- Split __Next__ bucket and increment __Next__
+- __Split rule__: “at most one split per insertion”
+	- Only split when you have to allocate a new bucket
+
+- Since buckets are split round-robin, long overflow chains typically don’t develop.
+	- Over time, the chains will shrink, as the index “matures”.
 
