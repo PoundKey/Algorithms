@@ -156,6 +156,26 @@ To every object in the scene we associate an right handed orthonormal object fra
 
 ![Points and Frames](./img/afm1.png)
 
+### Moving an Object
+We move an objects by appropriately updating its frame, which is represented by updating its matrix O.
+
+### Hierarchy
+
+### LookAt
+
+## Cameras and Rasterization
+### Projection
+[Matrix Transformation](http://www.codinglabs.net/article_world_view_projection_matrix.aspx)
+
+### Depth
+
+### From Vertex to Pixel
+
+
+## Lights
+### Material
+Fragment shading is a very rich topic and is at the core of making computer gen- erated images look as detailed and realistic as they do.
+
 ---
 ### Linear Algebra
 
