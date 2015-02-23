@@ -165,15 +165,20 @@ We move an objects by appropriately updating its frame, which is represented by 
 
 ## Cameras and Rasterization
 ### Projection
-[Matrix Transformation](http://www.codinglabs.net/article_world_view_projection_matrix.aspx)
+The two most used projections are the Orthographic Projection and the Perspective Projection.  
+To do the Orthographic projection we have to define the size of the area that the camera can see. This is usually defined with a width and height values for the x and y axis, and a near and far z values for the z axis 
+
+[Reference: Matrix Transformation](http://www.codinglabs.net/article_world_view_projection_matrix.aspx)
 
 ### Depth
 
 ### From Vertex to Pixel
 
 
-## Lights
+## Lighting and Shading
 ### Material
+Characterized by surface reflectance and scattering.
+
 Fragment shading is a very rich topic and is at the core of making computer gen- erated images look as detailed and realistic as they do.
 
 ---

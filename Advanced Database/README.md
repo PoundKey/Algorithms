@@ -373,3 +373,16 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 - Since buckets are split round-robin, long overflow chains typically don’t develop.
 	- Over time, the chains will shrink, as the index “matures”.
 
+### Example
+![Linear Hashing](img/lh/lh1.png)
+
+![Linear Hashing](img/lh/lh2.png)
+
+![Linear Hashing](img/lh/lh3.png)
+
+![Linear Hashing](img/lh/lh4.png)
+
+![Linear Hashing](img/lh/lh5.png)
+
+![Linear Hashing](img/lh/lh6.png)
+
