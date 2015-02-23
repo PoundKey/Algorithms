@@ -373,7 +373,7 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 - Since buckets are split round-robin, long overflow chains typically don’t develop.
 	- Over time, the chains will shrink, as the index “matures”.
 
-### Example
+### Linear Hashing Example
 ![Linear Hashing](img/lh/lh1.png)
 
 ![Linear Hashing](img/lh/lh2.png)
@@ -386,3 +386,34 @@ What is the service order if, while servicing cyl. 1400, we get these new reques
 
 ![Linear Hashing](img/lh/lh6.png)
 
+---
+## External Sorting
+- Sorting is a classic problem in computer science
+	- A large number of cycles is devoted to sorting.
+- __Problem__: An important database-related problem: How can we sort 10GB (or 10TB!) of data with only
+a small fraction of that amount of RAM?
+- When the data to be sorted is too large to fit into available main memory, we need to use an external sorting algorithm. Such algorithms seek to minimize the cost of disk accesses.
+- Using repeated passes over the data, even very large datasets can be sorted with a small amount of memory.
+- Common in-memory sorting algorithms (like Quicksort) don't optimize disk I/O's. (I/O issues is important consideration)
+
+### General Multiway External Mergesort Algorithm (GMEMS)
+- Suppose we need to sort a disk-resident file of size N pages with B pages of RAM (buffer pool space) available, where N > B
+- __Algorithm__:
+	1. Read B blocks/pages of data into memory, sort that data, and write it to a temporary file on disk. (This file is called a “sorted run” (SR) or “sublist” of length B.)
+	2. Repeat Step 1 until all N pages have been read in, and therefore the file has possibly many SRs of size B (except for the last SR which may be shorter).
+		- Each SR is itself sorted; but 2 side-by-side SRs likely are not
+		- The sublists (SRs) are stored using temporary disk space.
+	3. Until the whole file is sorted, do:
+		- Merge up to B-1 of the sorted runs to form an even longer SR.
+		- This longer SR is also written out as a temporary file on disk (unless it’s the final product, in which case you may wish to store it permanently)
+	4. Delete the consumed (smaller, input) sorted runs 
+
+![External MergeSort](img/emerge.png)
+
+- __Multi-way External Mergesort Example__:
+	- Suppose that we have 5 buffer pages available, and want to sort a file with 108 pages.
+	- __Pass 0__ produces ⌈108/5⌉ = 22 sorted runs of five pages each, except for the last run, which is only 3 pages long.
+	- __Pass 1__ does a four-way merge to produce ⌈22/4⌉ = 6 sorted runs of 20 pages each, except for the last run, which is only 8 pages long.
+	- __Pass 2__ produces ⌈6/4⌉ = two sorted runs; one with 80 pages and one with 28 pages.
+	- __Pass 3__ merges the two runs produced in Pass 2 to produce the sorted file.
+	- __Result__: In each pass we read and write 108 pages; thus the total cost is 2∗108∗4 = 864 I/Os. Applyingourformula,wehaveN1 = ⌈108/5⌉ = 22andcost=2∗N∗(⌈log<sub>B−1</sub>N1⌉+1) = 2 ∗ 108 ∗ (⌈log<sub>4</sub>22⌉ + 1) = 864, as expected.
