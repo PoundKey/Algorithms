@@ -417,3 +417,5 @@ a small fraction of that amount of RAM?
 	- __Pass 2__ produces ⌈6/4⌉ = two sorted runs; one with 80 pages and one with 28 pages.
 	- __Pass 3__ merges the two runs produced in Pass 2 to produce the sorted file.
 	- __Result__: In each pass we read and write 108 pages; thus the total cost is 2∗108∗4 = 864 I/Os. Applyingourformula,wehaveN1 = ⌈108/5⌉ = 22andcost=2∗N∗(⌈log<sub>B−1</sub>N1⌉+1) = 2 ∗ 108 ∗ (⌈log<sub>4</sub>22⌉ + 1) = 864, as expected.
+
+	![External MergeSort](img/emerge2.png)
