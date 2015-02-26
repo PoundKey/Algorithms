@@ -261,3 +261,38 @@ Network = Host + Adapters + Wire + Switches/Routers + Software
 ---
 
 ## Time & Physical Clocks
+__Time__: Decides event order and event intervals  
+__Types of clocks__:
+
+- Physical: 
+	- Externally Synchronized: clock that matches real world (e.g., ATM Receipts)
+	- Internally Synchronized: clock that matches clocks of other machines (e.g., File timestamps)
+	- Have both event ordering and event intervals
+- Logical:
+	- Ability to order events, but no concept of interval
+-  Computer Clock:
+	- A vibrating crystal and a counter, crystal interrupts host CPU at regular intervals
+- Issues for Synchronized Clocks
+	- Setting: hard to get “current” time accurately
+	- Keeping time: clocks run at slightly different rates
+	- Sum: Synchronizing clocks is hard due to message latency and clock drift
+	- Two Approaches: Authoritative Time Broadcast and Time Server
+
+- Cristian’s Algorithm
+	- Client
+		* T<sub>0</sub> = clock
+		* {I, UTC} = timeServer.readUTC () * T<sub>1</sub> = clock
+		* clock = UTC + (T<sub>1</sub>-T<sub>o</sub>-I)/2
+	- Server
+		* I - Adjustment factor, may be 0
+		* UTC - accurate at time of message send
+		* If T<sub>min</sub> can be reliably estimated then the accuracy is ± ((T<sub>1</sub> – T<sub>0</sub>)/2 – T<sub>min</sub>)
+
+- Adjusting for Clock Skew
+	- __Problem__: we can’t move any clocks backward
+	- __Solution__: If client is ahead of UTC, slow its clock so that it will converge with UTC before next synchronization message
+
+- NTP (Internet Network Time Protocol)
+	* Primary server gets UTC via radio
+	* Secondary servers synchronize hierarchically 
+	* Accuracy is roughly 30 milliseconds
