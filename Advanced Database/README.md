@@ -421,7 +421,18 @@ a small fraction of that amount of RAM?
 	![External MergeSort](img/emerge2.png)
 
 ### Blocked I/O and double buffering.
-__Buffer blocks__: read and write in units of b pages
+- __Buffer blocks__: read and write in units of b pages, each pass merge floor( (B/b - 1 ) runs.
+- A blocking factor of b pages => we read and write b pages at a time.
+- Page I/Os (number of passes multiplied by the number of pages in the file)
 
+![External MergeSort](img/blockio.png)
+
+- __Double Buffering__:
+	- In the context of external sorting, we can achieve overlap of CPU and I/O processing by allocating extra pages to each input buffer.
+	- Suppose that a block size of b = 32 is chosen. The idea is to allocate an additional 32-page block to every input (and the output) buffer.
+	- Assuming that the time to consume a block is greater than the time to read in a block, the CPU is never idle.
+
+![External MergeSort](img/dbuff.png)
 
 ### B+ Trees for Sorting
+If the file to be sorted has a clustered B+ tree index with a search key equal to the fields to be sorted by, then we can simply scan the sequence set and retrieve the records in sorted order. This technique is clearly superior to using an external sorting algorithm. If the index is unclustered, an external sorting algorithm will almost certainly be cheaper than using the index.
