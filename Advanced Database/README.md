@@ -420,4 +420,8 @@ a small fraction of that amount of RAM?
 
 	![External MergeSort](img/emerge2.png)
 
+### Blocked I/O and double buffering.
+__Buffer blocks__: read and write in units of b pages
+
+
 ### B+ Trees for Sorting

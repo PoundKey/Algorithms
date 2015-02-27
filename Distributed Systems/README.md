@@ -296,3 +296,6 @@ __Types of clocks__:
 	* Primary server gets UTC via radio
 	* Secondary servers synchronize hierarchically 
 	* Accuracy is roughly 30 milliseconds
+
+### Logical Time
+- In a distributed system, some events need not be ordered, others must be ordered for correct operation
