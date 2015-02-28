@@ -299,3 +299,67 @@ __Types of clocks__:
 
 ### Logical Time
 - In a distributed system, some events need not be ordered, others must be ordered for correct operation
+- __Goal__: Determine event order without centralization, and build system support for higher-level services
+- __Usage__: air traffic control systems, distributed locks, distributed checkpoint, recovery, etc.
+- __Distributed checkpoint recovery__:
+	- collection of nodes communicating over networw, and each updating local state based on messages
+	- __Goal__: capture consistent checkpoint of system
+	- __Approach__: each node records its updates in remote log, record logical time of update in log
+	- To checkpoint, combine all logs and order by logical time
+
+- The “Happened Before” relation:
+	- event A HB event B if and only if:
+		- A and B are on the same node and A precedes B in program order
+		- or, A is the sender of message m and B is the receiver of m
+	- Transitive property:
+		- (a < b) ^ (b < c) → (a < c)
+		- or: (a HB b) ^ (b HB c) → (a HB c)
+	- Algorithms that use the HB relationship
+		- logical clocks
+		- causally ordered atomic multicast (CBCAST)
+
+- Partial Order vs Total Order
+	- __Total order__: for any pair of events e<sub>i</sub> and e<sub>j</sub>, either e<sub>i</sub> < e<sub>j</sub> or e<sub>i</sub> > e<sub>j</sub>, as if a global clock orders every message send
+	- __Partial order__: for some pair of events e<sub>i</sub> and e<sub>j</sub>, either e<sub>i</sub> < e<sub>j</sub> nor e<sub>i</sub> > e<sub>j</sub>, we write this e<sub>i</sub> ~ e<sub>j</sub>
+
+- Why logical clock?
+	- label events with physical time, requires fine-grain internal synchronization, and this is very difficult/expensive to achieve
+	- label events with logical time, maintain logical time according to happened before relationships
+
+### Vector Timestamps
+- __Basic idea__: message from S to R orders R after S
+- Sender assigns sequence number (the node’s time) to message
+- Each node maintains a vector timestamp V
+	- At a particular node, the entries in V are that node’s idea of the current time on the other nodes
+	- Use V on R to order events on R with respect to other nodes
+	- Tag events with V of node on which they occur
+	- Use event timestamps to determine order
+
+![Vector Timestamp](img/vecs.png)
+
+- Labeling events:
+	- Label every event with vector timestamp of node on which it occurs
+	- Event E on node A, E.V = V, when E occurs
+	- __Note__: to use E.V to order events from the same node, increment V<sub>A</sub> on A when E occurs
+
+![Vector Timestamp](img/vecdec.png)
+
+- Good: ordering exactly matches happened before
+- Bad: every message must contain a timestamp vector, timestamp-vector size is O(n)
+
+### Distributed logical clock (DLC)
+- __idea__: use a single number to represent logical time
+- logical time LT<sub>x</sub> stored at every node x, starts at 0 on every node
+- when a node x, sends a message:
+	- LT<sub>x</sub> += 1
+	- Include LT<sub>x</sub> in the message
+- when a node y receives a message from x:
+	- LT<sub>y</sub> = max (LT<sub>x</sub>,LT<sub>y</sub>)
+
+![DLC](img/dlc1.png)
+
+- __Note__: Some events that DLC orders, may not be ordered by Happened Before
+	- DLC orders some events unnecessarily
+
+
+![DLC](img/dlc2.png)
