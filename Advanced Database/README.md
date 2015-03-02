@@ -420,6 +420,21 @@ a small fraction of that amount of RAM?
 
 	![External MergeSort](img/emerge2.png)
 
+- In practice, # of runs is rarely more than 2.
+- In practice, External Mergesort runs in O(N) time, where N is the number of pages.
+
+### Improving External MergeSort
+- Group blocks by cylinder (“cylindrification”)
+- One big disk -> several smaller disks
+- Mirrored disks = multiple copies of the same data
+- Disk scheduling: the “elevator” algorithm
+- “Prefetching” or “Double Buffering”
+
+### Cylindrification
+- A more intelligent approach to reduce the number of seeks
+- When reading or writing blocks in a known order, place them together on the same cylinder.
+- Once we reach that cylinder (with one seek), we can read block after block, with negligible rotational latency, and no extra seeks.
+
 ### Blocked I/O and double buffering.
 - __Buffer blocks__: read and write in units of b pages, each pass merge floor( (B/b - 1 ) runs.
 - A blocking factor of b pages => we read and write b pages at a time.
