@@ -451,3 +451,42 @@ a small fraction of that amount of RAM?
 
 ### B+ Trees for Sorting
 If the file to be sorted has a clustered B+ tree index with a search key equal to the fields to be sorted by, then we can simply scan the sequence set and retrieve the records in sorted order. This technique is clearly superior to using an external sorting algorithm. If the index is unclustered, an external sorting algorithm will almost certainly be cheaper than using the index.
+
+## Query Evaluation and Optimization 
+- Query Processing factors: The sizes of the relations involved, existing indexes and sort orders, the size of the available buffer pool, and the buffer replacement policy.
+- __Access Paths__: The alternative ways to retrieve tuples from a relation.
+	- An access path is either (1) a file scan or (2) an index plus a matching selection condition.
+	- The selectivity of an access path is the number of pages retrieved (index pages plus data pages) 
+	- The most selective access path is the one that retrieves the fewest pages; using the most selective access path minimizes the cost of data retrieval.
+- The key is to utilize information in the selection condition and to use an index if a suitable index is available.
+- The goal of a query optimizer is to find a good evaluation plan for a given query. 
+- The optimizer generates alternative plans and chooses the plan with the least estimated cost. To estimate the cost of a plan, the optimizer uses information in the system catalogs.
+
+![Query Optimazation](img/query_p.png)
+
+- A __query evaluation__ plan (or simply plan) consists of an extended relational algebra tree, with additional annotations at each node indicating the access methods to use for each relation and the implementation method to use for each relational operator.
+
+![Query Optimazation](img/rat.png)
+
+![Query Optimazation](img/rat2.png)
+
+### The Join Operation 
+We assume that there are M pages in R with p<sub>R</sub> tuples per page, and N pages in S with p<sub>S</sub> tuples per page. 
+#### Nested Loops Join
+```python
+foreach tuple r ∈ R do 
+		foreach tuple s ∈ S do
+			if r==s then add ⟨r,s⟩ to result
+```
+
+- __Total Cost__: M + p<sub>R</sub> ∗M ∗N  ~140 hours
+- A simple refinement is to do this join page-at-a-time. 
+- For each page of R, we can retrieve each page of S and write out tuples ⟨r,s⟩ for all qualifying tuples r ∈ R-page and s ∈ S-page.
+- Total Cost:  M + M ∗ N 	~1.4 hours
+
+#### Block Nested Loops Join
+![Loops Join](img/bnl.png)
+
+#### Index Nested Loops Join
+If there is an index on one of the relations on the join attribute(s), we can take advantage of the index by making the indexed relation be the inner relation. 
+

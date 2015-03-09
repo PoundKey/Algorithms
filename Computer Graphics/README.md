@@ -181,7 +181,24 @@ Characterized by surface reflectance and scattering.
 
 Fragment shading is a very rich topic and is at the core of making computer gen- erated images look as detailed and realistic as they do.
 
+### Lighting and Shading Model 
+A lighting model determines how light is reflected on a particular point. The perceived colour on that point depends on a number of parameters, for instance, the light direction, the viewer direction, the properties of the material, to name a few.
+
+A shading model is related to how lighting models are used to lit a surface. For instance, we can compute a single colour value per triangle, Flat shading; compute the colour for the vertices of a triangle and interpolate the colour values for points inside the triangle, Gouraud shading; or even compute the colour for every surface point, Phong shading.
+
+Colour in CG is composed of several terms, namely:
+
+- Diffuse: light reflected by an object in every direction. This is what we commonly call the colour of an object.
+- Ambient: used to simulate bounced lighting. It fills the areas where direct light can’t be found, thereby preventing those areas from becoming too dark. Commonly this value is proportional to the diffuse colour.
+- Specular: this is light that gets reflected more strongly in a particular direction, commonly in the reflection of the light direction vector around the surface’s normal. This colour is not related to the diffuse colour.
+- Emissive: the object itself emits light.
+
+## Interpolation (插值)
+- Interpolation is not a branch of mathematics but rather a collection of techniques.
+- 
+
 ---
+
 ### Linear Algebra
 
 #### Points and Vectors
