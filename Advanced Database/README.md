@@ -490,3 +490,5 @@ foreach tuple r ∈ R do
 #### Index Nested Loops Join
 If there is an index on one of the relations on the join attribute(s), we can take advantage of the index by making the indexed relation be the inner relation. 
 
+
+
