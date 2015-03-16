@@ -409,3 +409,12 @@ __Types of clocks__:
 - Messages only given to application once sequence numbers are definitively known
 
 ### Causally ordered atomic multicast (CBCAST)
+//todo
+
+## Group Communication and Synchronization
+- Sharing in a distributed systems:
+	- Clients read and write a shared resource (e.g., database, file system)
+- Distributed systems are naturally concurrent
+	- Clients run in parallel and Servers handle multiple requests at once
+
+### Mutual exclusion
