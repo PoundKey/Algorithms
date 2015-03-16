@@ -409,7 +409,7 @@ __Types of clocks__:
 - Messages only given to application once sequence numbers are definitively known
 
 ### Causally ordered atomic multicast (CBCAST)
-//todo
+//TODO
 
 ## Group Communication and Synchronization
 - Sharing in a distributed systems:
@@ -418,3 +418,41 @@ __Types of clocks__:
 	- Clients run in parallel and Servers handle multiple requests at once
 
 ### Mutual exclusion
+- Critical section: code that accesses a shared resource
+- Mutual exlusion ensures that only one thread in critical sections at the same time
+- Approach to mutual exclusion:
+	- 1. First approach: centralize all shared resources
+		- put shared resources at a server
+		- clients access resources via RPC to server
+		- all critical sections are on server
+		- this is a non-distributed approach, easy, but hard to scale
+	- 2. Second approach: distributed resources
+		- server stores a database
+		- clients cache portions of daabase locally, manipulates its copy and RPC to server to save updated data
+		- __Problem__: mutual exlusion of client and maintain consistency of client-cached data
+
+- __Problem 1__: Mutual Exlusion of Client:
+- Locks in a Distributed System
+	- Lock is a global variable used for synchronization in a non-distributed system
+	- Centralized locks in distributed systems store on a centralized server
+	- Clients synchronize using RPC to lock server
+- Centralized Lock Manager
+	- Operations (via RPC): acquire (read/write) and release
+	- State: held, waiter queue (list of clients waiting for the lock)
+
+- __Problem 2__: Consistency of Data
+- Invalidation-based consistency
+	- First get lock from lock manager, then get data from server
+- Update-based consistency
+	- Get data from server without holding lock
+	- Get lock from lock manager
+	- Get any updates to data from server: 
+		- Push: server sends updates automatically; local check
+		- Pull: client must request the updates from server
+
+- Centralized Lock Manager
+	- Good: Three messages to request/release, simple and works
+	- Issues: Lock contention, Client failure, Scalability and server failure
+
+- Problem 1: Client that holds lock x, prevent all other client and server from acquiring x
+- Solution: Callback locks and leases
