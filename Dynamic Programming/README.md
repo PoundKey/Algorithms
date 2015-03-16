@@ -30,7 +30,7 @@
 ### Multi-way Choices on Recurrence
 //TODO
 
-### SubsetSumsandKnapsacks:AddingaVariable
+### Subset Sums and Knapsacks: Adding a Variable
 __Problem__: In the scheduling problem we consider here, we have a single machine that can process jobs, and we have a set of requests {1, 2, . . . , n}. We are only able to use this resource for the period between time 0 and time W, for some number W. Each request corresponds to a job that requires time w<sub>i</sub> to process. If our goal is to process jobs so as to keep the machine as busy as possible up to the “cut-off” W, which jobs should we choose?
 
 This problem is a natural special case of a more general problem called the Knapsack Problem, where each request i has both a value v<sub>i</sub> and a weight w<sub>i</sub>. The goal in this more general problem is to select a subset of maximum total value, subject to the restriction that its total weight not exceed W.

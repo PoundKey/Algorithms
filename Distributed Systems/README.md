@@ -363,3 +363,49 @@ __Types of clocks__:
 
 
 ![DLC](img/dlc2.png)
+
+## Group communication
+- Unicast (one-to-one, point-to-point)
+	- Streaming TCP/IP
+	- Request/Response IPC, RPC
+- Multicast (one-to-many, point-to-group)
+	- ABCAST, CBCAST
+- A group is a collection of nodes identified by endpoint of communication
+
+### Central issue - Consistency
+- Updating replicated data, replicated state stored by each node in group is modified by network messages
+- Group protocol maintains state consistency: nodes start with same state, and remain same state after receving a bunch of group messages
+- Key semantics of group protocols:
+	- Atomicity: message received by every group member or none
+	- Order: all replicas agree on message order 
+	- Protocols vary on what semantics they provide
+
+### Saturation Protocol
+- Protocol description: 
+	- client send message to every node in the group, repeat at most N times, wait for response from any node OR timeout, if response is received, break 
+- Not atomic – it is possible that not all connected nodes will get the message
+
+### Flood Protocol
+![Group Communication](img/flood.png)
+
+- __Properties of Flood__: If any node receives M and does not fail then all non-failed nodes will receive M
+
+### Message Ordering
+- __Problem__: Suppose several group messages were sent simultaneously from different nodes. Would all nodes receive the messages in the same order? Does it matter?
+
+### Total ordering with ABCAST
+- Need a global clock per group
+	- generates globally unique and increasing times
+- Assign every message a global send time
+	- each send results in a “read” of the clock
+- Receive messages in send-time order
+	- hold message until all “earlier” messages received
+
+### Atomic Total Ordered Broadcast (AOBCAST)
+- Basically the sender proposes a sequence number
+- Receivers propose a sequence number and send it back
+- Sender selects the largest sequence number that was sent back
+- Tells all the nodes what the final sequence number is
+- Messages only given to application once sequence numbers are definitively known
+
+### Causally ordered atomic multicast (CBCAST)

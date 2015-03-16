@@ -487,8 +487,35 @@ foreach tuple r ∈ R do
 #### Block Nested Loops Join
 ![Loops Join](img/bnl.png)
 
+__Cost__: M + ceiling( M/(B-2) ) * N
+
 #### Index Nested Loops Join
 If there is an index on one of the relations on the join attribute(s), we can take advantage of the index by making the indexed relation be the inner relation. 
 
+#### Sort-Merge Join
+The basic idea behind the sort-merge join algorithm is to sort both relations on the join attribute and to then look for qualifying tuples r ∈ R and s ∈ S by essentially merging the two relations.
 
+__Cost__: The cost of sorting R is O(M logM ) and the cost of sorting S is O(N logN ). The cost of the merging phase is M + N if no S partition is scanned multiple times.
+
+This approach is especially attractive if at least one relation is already sorted on the join attribute or has a clustered index on the join attribute. In practice the I/O cost of the merge phase is typically just a single scan of each relation. 
+
+### Pipelined Evaluation
+- When a query is composed of several operators, the result of one operator is sometimes pipelined to another operator without creating a temporary relation to hold the intermediate result.
+- Pipelining the output of an operator into the next operator saves the cost of writing out the intermediate result and reading it back in, and the cost savings can be significant.
+- When the input relation to a unary operator (e.g., selection or projection) is pipelined into it, we sometimes say that the
+operator is applied on-the-fly.
+
+![Pipeline](img/pipe.png)
+
+### Pushing Selections
+- Evaluate Selection before Join operation
+- A further refinement is to push the projection, just like we pushed the selections past the join.
+
+![Pipeline](img/psel.png)
+
+### Using Indexes
+![Pipeline](img/pindex.png)
+
+
+### Query Trees and Plans
 
