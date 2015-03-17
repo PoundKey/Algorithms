@@ -600,4 +600,97 @@ __Implementation__:
 
 ![Logging](img/logging.png)
 
-### Redo logging - Roll Forward
+### Redo logging - Roll forward
+- For each transactional update
+	* change in-memory copy
+	* write new value to log
+	* do not change on-disk copy until commit
+- Commit
+	* write commit record to log 
+	* write changed data to disk 
+	* write truncate record to log
+- Abort
+	* write abort record to log 
+	* invalidate in-memory data 
+	* reread from disk
+
+__Recovery__:
+
+- When the system restarts after a failure
+	* use log to roll forward committed transactions
+	* normal access stopped until recover is completed
+- Complete committed, but untruncated trans * for every trans with a commit but no truncate
+	* read new values from log and update disk values * write truncate record to log
+- Abort all uncommitted transacton
+	* for every transaction with no commit or abort, write abort record to log
+
+__Disadvantage__:
+
+- No disk writes until commit
+- Must integrate cache and transaction logging 
+	* complicates design of both systems
+- This locking in memory degrades performance
+	* particularly if transactions are long running or modify lots of data
+
+### Undo logging - Roll backward
+- For each transactional update
+	* write old value to log
+	* modify data and then write new value to disk any time
+- Commit
+	* ensure that all updates have been written to disk (called “force”)
+	* write commit record to log 
+- Abort
+	* use log to recover disk to old values
+
+__Recovery__:
+
+- When the system restarts after a failure
+	* use log to rollback uncommitted transactions
+	* normal access stopped until recovery completed
+- Undo effect of any uncommitted trans
+	* For every trans with no commit or abort, use log to recover disk to old values and write abort record to log
+
+![Logging](img/rollb.png)
+
+__Disadvantage__:
+
+- Must modify disk data before commit can be written to log
+- Performance impact
+	* slows commit: transactions hold locks longer
+	* increases disk-write bandwidth requirements: if several transactions in a row modify same data, would write to disk only once, at end of updates
+
+### Write-ahead logging
+- Idea
+	* combine undo and redo logging
+- How
+	* write old values to log
+	* modify data
+	* write new values to log anytime before commit
+	* write commit record to log
+	* write data back to disk at anytime, when done write truncate record to log
+
+__Failure Recovery__:
+
+- Commit but no truncate
+	* Use roll forward based on new values 
+- No commit
+	* Use old value to roll back
+
+### Shrinking the Log File (Truncation)
+- Truncation is the process of
+	* removing unneeded records from transaction log 
+- For redo logging
+	* remove transactions with t or a 
+- For undo logging
+	* remove transactions with c or a
+
+### Transactions in Distributed Systems
+-  A distributed transaction involves
+	* updates at multiple nodes
+	* and the messages between those nodes
+- Distributed __Atomic Commit__ Requirements:
+	1. All workers that reach a decision reach the same one
+	2. Workers cannot change their decisions on commit o r abort once a decision is made
+	3. To commit all workers must vote commit
+	4. If all workers vote commit and there are no failures the transaction will commit
+	5. If all failures are repaired and there are no more failures each worker will eventually reach a decision (In fact it will be the same decision)
