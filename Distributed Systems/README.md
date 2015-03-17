@@ -450,9 +450,154 @@ __Types of clocks__:
 		- Push: server sends updates automatically; local check
 		- Pull: client must request the updates from server
 
+- Advantage of distributed resources:
+	- readers can operate in parallel
+	- writers cannot operate in parallel, but operate with fine-grain updates
+
 - Centralized Lock Manager
 	- Good: Three messages to request/release, simple and works
 	- Issues: Lock contention, Client failure, Scalability and server failure
 
 - Problem 1: Client that holds lock x, prevent all other client and server from acquiring x
-- Solution: Callback locks and leases
+- Solution: Callback locks and leases: Server upcalls client to request lock back - revoke(aLock)
+- Leased Locks: 
+	- lock is only good for predetermined amount of time - expiryTime = aLock.request()
+	- clients must renew locks before they expire - bool = aLock.renew()
+	- revokes lock by refusing to allow client to renew it
+
+- Orphaned Lock: client or network fails while client is holding lock
+- Solution: Leases and server tracks client health using probe messages or heartbeat (e.g., AYA, IAA)
+- After the lease is expired, expired leases can be granted to another client
+- Problem with server revocation approach:
+	- network fails, but client continues to run, client might think it holds the lock, but server may have revoked it
+- Solution: client must also track server’s health
+	- if client can’t contact the server, it must assume that the lock has been revoked
+
+### Scalability and Server Failure
+- __Addressing scalability__: Lock messages are small and overhead is low and every lock can have a different server
+- __Server Failure__: If lock manager fails, no client can access anything
+- Responsibility of a lock manager: it enforces a global order on lock acquisition by serializing requests at the lock manager
+
+### Distributing Lock Management
+- Get rid of lock-manager server
+- Use logical clock to order lock requests
+- Use broadcast to request and release locks
+
+__Implementation__:
+
+- Nodes maintains a DLC-TO, T - Total-ordered distributed logical lock
+- For each lock, nodes also maintain:
+	- a request queue reqQ[], sorted by earliest time first
+- Lock request is broadcast to every node
+	- Node A sends message (REQ, lockname, T<sub>A</sub>, A)
+	- reqQ[lockname] += (REQ, T<sub>A</sub>, A)
+	- Waits for response from every node
+- Node B Receives REQ from A
+	- B updates T<sub>B</sub> to max(T<sub>A</sub> , T<sub>B</sub>)
+	- If B does not have or want lock, it sends reply to A: (OKAY, lockname, B)
+	- If B has lock:
+		- It queues the req: reqQ[lockname] += (REQ, T<sub>A</sub>, A), and no reply
+	- If B is waiting for the lock too
+		- If T<sub>A</sub> < time of B’s lock request, then send OKAY
+		- Else, reqQ[lockname] += (REQ, T<sub>A</sub>, A)
+- Release / Acquire
+	- When a node releases a resource
+		- Send OKAY for every request in reqQ[lockname]
+	-  When node receives OKAY from every node, it holds the lock
+- __Analysis__:
+	- Good: No single point of failure
+	- Bad: Higher overhead than Centralized Lock Manager (3 messages for CLM)
+	- Issue: Group membership when node fails, failure of node that holds the lock
+
+![Distributing Lock Management](img/dlm.png)
+
+### Token Ring Lock Management
+- Logically organize nodes into a ring
+- Each lock has a single lock token 
+- Pass token around the ring until someone wants to acquire the lock
+- To acquire the lock:
+	- Wait for token, hold it until you're done with the lock, then pass it
+- Cost: To acquire: n-1 messages, To release: 1 messages
+- Bad: Overhead even when no one wants the lock
+
+### Summary of Distributed Lock Management
+- Lowest Cost: Centralized lock manager (3 msgs VS O(n) msgs)
+- Tolerate server failure - Distributed and Token ring lock management 
+- Transactions allow us to deal with failures better 
+
+---
+## Transactions
+
+### Distributed Transaction
+- __Goal__: a transaction that involves multiple nodes, and achieves atomicity through logging
+- __Definition__: A transaction is a sequence of data operations with the following properties:
+	- Atomic: All or nothing
+	- Consistent: consistent state in => consistent state out
+	- Independent: Patial results are not visible to concurrent transactions 
+	- Durable: Once completed, new state survives crashes
+- Importance of Independence:
+	- lost update: t1 and t2 read x and then write x, t1's update is lost 
+	- inconsistent retrieval: intermediate state may be inconsistent
+	- dirty read: t1 updates x, t2 reads x, t1 aborts, t2 has dirty value of x
+	- premature write: t1 and t2 update x, t1 aborts. t2's update is lost
+
+### Serializability
+- A set of transactions is serializability iff
+	- resulting state is equivalent to that produced by some serial ordering of those transactions
+- Transactions don't actually have to run in serial order, system just ensures that actual outcome is the same as if they had 
+- Two possbile approaches to this:
+	- Two Phase Locking
+	- Strict Two Phase Locking
+
+### Two Phase Locking
+- Locks: reader/writer locks, acquired as transaction proceeds, and no more acquired after first release
+- __Phase 1__: acquire locks and access data, but release no locks
+- __Phase 2__: access data, release locks, but acquire no new locks
+- Two phase locking ensures serializability, but not independence
+
+### Strict Two Phase Locking
+- Like two-phase locking, but release no locks until transaction commits
+- __Phase 1__: acquire locks and access data, but release no locks
+- __Phase 2__: commit/abort transaction and then release all locks
+- Strict two phase locking ensures insolation - no transaction can see incomplete results of another
+
+### Deadlock
+- Transactions increase likelihood of deadlock because they must hold lock until transaction commits/abort
+- All deadlocks appear as cycles in graph, so we will have to abort ransactions until cycles are broken
+
+![Deadlock](img/deadlock.png)
+
+### Optimistic Concurrency Control
+- Two phase locking creates more lock conflicts than necessary, especially for long running transactions
+- Optimistic concurrency control: no locks - process works on copies of data
+- During commit, check for conflicts and abort if any otherwise write the copies
+- __Analysis__:
+	- Good: no overhead when there’s no conflict
+	- Bad: if conflicts are common overhead much higher
+
+### Recoverability (Atomicity)
+- __Problem__: ensure atomic update in face of failure
+- If failure occurs while updates are performed:
+	- rollback to remove updates or
+	- roll forward to complete updates
+
+### Logging
+- Persistent (on disk) log: records information to support recovery and abort
+- Types of logging:
+	- redo logging --- roll forward
+	- undo logging --- roll back (and abort)
+	- WAL --- roll forward and back
+- Types of log records: begin, update, abort, commit, and truncate
+- Atomic update: atomic operation is write of commit record to disk
+- Transaction committed iff __commit record__ in log
+
+### Logging an Update
+- Value logging:
+	- write old or new value of modified data to log
+	- simple, but not always space efficient or easy (hard for: malloc, system calls)
+- Operation logging
+	- write name of operation and its arguments, usually used for redo logging
+
+![Logging](img/logging.png)
+
+### Redo logging - Roll Forward
