@@ -704,6 +704,7 @@ __Failure Recovery__:
 	- contact coordinator to begin and commit transactions, to respond to votes and to determine outcome when uncertain
 	- maintain local log of updates
 
+---
 ### Two phase commit
 - Transaction logs
 	* Coordinator – begin, commit, and abort 
@@ -759,4 +760,35 @@ __Failure Recovery__:
 ---
 ### Three Phase Commit
 
+- key idea
+	* add another exchange of “get ready” messages
+	* so that workers can know state of failed worker 
+- worker determines transaction decision by
+	* if coordinator is down, contact another worker 
+	* if no worker has received final decision
+		- a majority can make the decision 
+	* must deal with inaccessible workers
+		- if any could abort then majority must abort
+		- if any could commit then majority must commit
+
+![Three Phase Commit](img/tpcommit4.png)
+
+![Three Phase Commit](img/tpcommit5.png)
+
+### Unit Summary
+- Transactions
+	- atomicity using undo/redo logs
+	- and atomic disk-write of commit record
+- Distributed Transactions
+	- two-phase commit
+		- updates logged locally at each participant
+		- one node coordinates transaction
+		- atomicity using atomic disk-write to coordinator log
+		- worker may not know decision locally if it or coordinator fails, ask coordinator or another worker for final decision
+	- three-phase commit
+		- ensure transaction decision can be reached and without blocking when a majority of workers are accessible
+
+---
+### Reliable Interprocess Communication
+//TODO UP TO PAGE 384
 
