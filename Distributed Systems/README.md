@@ -690,7 +690,73 @@ __Failure Recovery__:
 	* and the messages between those nodes
 - Distributed __Atomic Commit__ Requirements:
 	1. All workers that reach a decision reach the same one
-	2. Workers cannot change their decisions on commit o r abort once a decision is made
+	2. Workers cannot change their decisions on commit or abort once a decision is made
 	3. To commit all workers must vote commit
 	4. If all workers vote commit and there are no failures the transaction will commit
 	5. If all failures are repaired and there are no more failures each worker will eventually reach a decision (In fact it will be the same decision)
+
+### Atomic commit using coordinator
+- Transaction coordinator
+	- issues tid to clients (called workers)
+	- knows about all workers
+	- provides atomic commit
+- Workers
+	- contact coordinator to begin and commit transactions, to respond to votes and to determine outcome when uncertain
+	- maintain local log of updates
+
+### Two phase commit
+- Transaction logs
+	* Coordinator – begin, commit, and abort 
+	* Worker – begin, commit, abort, update, and prepared
+- Messages
+	* worker 􏰥-> cordinator: commitRequest 
+	* cordinator 􏰥-> workers: prepareToCommit
+	* worker 􏰥-> cordinator: prepared or abort 
+	* cordinator -> workers: committed or abort
+
+![Two Phase Commit](img/tpcommit.png)
+
+![Two Phase Commit](img/tpcommit2.png)
+
+### Problem: Failure of Worker
+- __Type 1__:
+- Coordinator action
+	* Coordinator’s prepareToCommit has timeout and it aborts transaction if worker fails to reply
+- Worker recovery
+	* Log records with no P, and locally abort transaction
+- __Type 2__:
+- Any transaction with a P and no C
+	* worker does not know if transaction committed
+	* must send message to coordinator to find out
+		- If coordinator is down could it send a message to another worker?
+- In summary
+	* once worker has sent prepared, the transaction can commit at anytime, even if the worker has not received the commit message.
+
+![Two Phase Commit](img/tpcommit3.png)
+
+### Problem: Failure of Coordinator
+- worker sends commitRequest
+	* timeout if no prepareToCommit received 
+	* abort transaction locally
+- worker sends prepared (or aborted)
+	* timeout if no committed (or aborted) received
+	* worker does not know if transaction has committed and must check with someone (other works)
+
+### Determining Transaction Decision
+- need to ask someone else when coordinator fails with incomplete prepareToCommit
+	* worker fails with P, but not C in its log
+- ask coordinator
+	* worker sends decisionRequest(tid) to coord
+	* coord scans log for this tid and sends committed or aborted back to worker
+
+### Coordinator Unavailable
+- Worker checks with other workers (got list of workers with the prepareToCommit)
+	* Some worker has commit – then commit the transaction
+	* Some woker has abort – then abort the transaction
+	* Some worker has no prepared – it can abort
+	* All workers have prepared – block indefinitely (in some cases may be OK to select a new coordinator)
+
+---
+### Three Phase Commit
+
+
