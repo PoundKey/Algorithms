@@ -619,8 +619,10 @@ __Recovery__:
 - When the system restarts after a failure
 	* use log to roll forward committed transactions
 	* normal access stopped until recover is completed
-- Complete committed, but untruncated trans * for every trans with a commit but no truncate
-	* read new values from log and update disk values * write truncate record to log
+- Complete committed, but untruncated trans 
+	* for every trans with a commit but no truncate
+	* read new values from log and update disk values 
+	* write truncate record to log
 - Abort all uncommitted transacton
 	* for every transaction with no commit or abort, write abort record to log
 
@@ -788,7 +790,196 @@ __Failure Recovery__:
 	- three-phase commit
 		- ensure transaction decision can be reached and without blocking when a majority of workers are accessible
 
----
-### Reliable Interprocess Communication
-//TODO UP TO PAGE 384
+### Crashed node recovery
+- If in R, or P must locate current coordinator to get commit decision
+- If in R at the time of crash
+	* All non-failed processes could have been in R and hence abort would have been decided
+	* Commit could have been decided and processes in P so might have committed as well
+- If in P
+	* Could have been first process moved to P before coordinator failure so everyone in R and abort would have been decided
+	* One or more other processed could also have been in P so commit decided
 
+### Three-phase commit Network failures
+- Elect a new coordinator, but now require a majority for a decision – only send commit once a majority are in P
+- If see only Rs, or PA send messages to advance to PA, once you have a majority abort
+- If majority in R or P and at least one in P then send messages to move everyone to P, this includes those in PA, Commit once the majority is confirmed
+- Block all other cases
+
+---
+## Reliable Interprocess Communication (IPC)
+- Request-response model
+	* client-server model (typically)
+	* client sends request and waits
+	* server processes request and sends response
+- Ideally it takes 2 messages 
+	* Request from client to server 
+	* Result from server to client
+
+- Example: TCP for request and response
+	- Designed for streaming
+	- Connection-based: three way handshake to setup and four messages to teardown connection
+	- Total: 9~11 messages, heavy-weight state, used for http
+	- We can do better
+
+- Message delivery semantics
+	- Request processed by server:
+	- Maybe ( >=0 ), at least once ( >=1), at most once (0 or 1), exactly once ( =0 )  
+
+### Best effort IPC
+- Protocol tries (real hard) to deliver req
+	* no guarantee of delivery
+- What if res doesn’t come back?
+	* client can either: wait forever, give up or try again
+
+### Problem: Lost Response
+- __Solution 1__: Idempotent operations
+	- An operation is idempotent if performing it more than once produces the same result as performing it exactly once
+- __Solution 2__: Reliable IPC
+	- Exactly-once semantics: If client gets a response client must know that message processed exactly once
+	- Must be able to tolerate four problems 
+		* loss of req message
+		* loss of res message
+		* crash/restart of server
+		* crash/restart of client
+
+### Basic IPC protocol
+![IPC](img/basicipc.png)
+
+- __Question__: Can we get rid of server’s ack?
+	* can we use res as ack?
+	* need another way to detect duplicate messages
+
+- Solution: Client sequence numbers
+	- Client assign unique number to every req (higher than all previous used by that client), and include seqnum with req message
+	- Server includes a client table, one entry for each client, and each entry contains the highest req seqnum received from that client, plus the value of res for that seqnum
+	- Check seqnum of each req against the table entry data:
+		- if < highest, then reject
+		- if = highest,  send saved res, or if still processing then wait until res is ready
+		- if > highest, process the req
+
+![IPC](img/seqipc.png)
+
+### The client timeout value (t-req)
+- t-req must adjust to failure and delay, if it's too short, causes unnecessary retransmissions; if it's too long, causes delay recovery from lost message
+- __Approximation__: t-req >= 2 * network-delay + server-processing time
+- Issue: the server-processing time is too long
+- Solution: Server-to-client: I-am-alive (iaa)
+
+### Server-to-client: I-am-alive (iaa)
+- Needed if takes a long time to process req
+- Server starts prcoessing req, and wait __t-iaa__ before sending iaa to client
+- send res when finished and wait for ack
+- Client send req, wait t-req before re-sending req
+- if __iaa__ received, cancel t-req but continue wating 
+- when res received send ack
+
+![IPC](img/iaaipc.png)
+
+### Calibrating the parameters
+- __t-iaa__: threshold between "short" and "long" requests
+- __t-req__: expected worst-case delay for req, network-delay + iaa (in sec)
+- number of client retries: 3 or so
+- Number of messages:
+	- if server-processing < network-delay + t-iaa, three messages (req, res, ack)
+	- otherwise four messages (req, iaa, res, ack
+
+### Problem with iaa
+- Client waits forever for res after receiving iaa
+- And it's really forever if res is lost after iaa, due to server crashes between iaa and res
+- Solution: Client must keep tabs on the server (heart beat)
+
+### Client-to-server: are-you-alive? (aya)
+- Client sends aya i to server, allows client to detect server failure, and informs server that client is still waiting
+- Protocol changes:
+	- Client: after receiving iaa i, wait t-aya before sending aya i 
+	- wait for iaa i, re-trying N times before giving up
+	- Server: when aya i received, check seq, respond with either res i or iaa i
+
+![IPC](img/ayaipc.png)
+
+### Handling message loss
+- From Server -> Client
+	- req: client waits t-req, resends req up to N times 
+	- res: if no iaa received, client times out and resends req, if iaa received, client times out and sends aya (N times)
+
+### Going from three messages to two
+- Maybe we can get rid of client to server ack
+	* purpose is to tell server it can free last res
+- Alternatives: Use req i + 1 as implied ack for req i 
+ 	* only works for single-threaded clients 
+- Discard res after a while 
+- How long must server save res?
+	- Server must save res while client is waiting
+	- Hard part is to get to know how long to wait without getting a message from client
+	- __Waiting time__: 
+		- if no iaa sent: N * t-req 
+		- if iaa sent: 
+			- N * t-req + (N + 1) * t-aya (no aya received)
+			- N * t-aya (aya received)
+
+### Server Crash
+- Problem
+	* we want server to process each request exactly once. However after restart, server’s seqnum database is lost 
+	* must ensure that no req is processed twice, once before crash and again after 
+- Solution
+	* server epoch numbers, new epoch number for every server restart; sometimes port number can act as epoch number 
+	* include epoch number in server identifier: id = (ip-addr, port-num, epoch)
+	* server rejects requests from other epochs and returns “stale identifier” error
+
+### Client Crash
+- Client crashes with outstanding req 
+	* req is called an orphaned request
+	* server can stop processing
+	* server uses aya as heartbeat, if server does not receive aya after N*t-aya, it stops processing 
+- Client crashes while holding resource
+	* solutions: server probes client
+	* resource lease
+- Problem with sequence numbers
+	* upon restart client does not know highest seqnum
+	* Server could already have completed request with that seqnum and respond with “old” result
+- Solution
+	* client epoch numbers: unique number with every restart; again, port number can be used as epoch number 
+	* client identifier includes epoch
+		- id = (ip-addr, port-num, epoch)
+	* to server restarted client is different client 
+	* also solves problem of seqnum rollover
+
+### Multi-threading
+- A thread is a sequential flow of control.
+	- its like a process, lighter weight
+	- Implemented by programming language, same __address space__, and same program/process
+- Multi-Threading means multiple threads are allowed to run concurrently.
+	- For example, when a thread blocks to wait for an IPC or disk-IO, another thread, possibly in the same process, is run.
+
+__Problem with Mutl-Threaded Clients__:
+
+- Server might receive a req from a client process while processing an earlier req from that process
+- Impact to server:
+	- must save multiple res for each client
+	- cannot use "highest seqnum" to detect duplicates
+	- cannot use req i+1 as implied ack for res i
+
+__Handling multi-threaded clients__:
+
+- For each client, server stores:
+	- list of all outstanding requests (all reqs from the same client), including seqnum, saved res, and expiration time
+	- lowest ad highest seqnum of outstanding reqs
+- When server receives a req i 
+	- if i > highest seqnum, process new request 
+	- if i < lowest seqnum, reject request with error message
+	- if i is know, it's a duplicate, send saved __res__
+	- else, process new request
+- Need to take care when changing what the lowest numbered outstanding request is
+
+### Other Optimizations
+- Can send fewer iaa/aya messages
+	- One iaa/aya per client-server (to all outstanding reqs of a client)
+	- aya: don't include a sequnum
+	- iaa: list seqnums received from client
+- Client waiting for res
+	- one waiter loops for all res 
+	- keep table of outstanding req
+	- match incoming res to req
+
+## Setting the Stage for RPC
+//TODO UP TO 405 
