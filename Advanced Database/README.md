@@ -499,6 +499,10 @@ __Cost__: The cost of sorting R is O(M logM ) and the cost of sorting S is O(N l
 
 This approach is especially attractive if at least one relation is already sorted on the join attribute or has a clustered index on the join attribute. In practice the I/O cost of the merge phase is typically just a single scan of each relation. 
 
+#### Hash Join
+
+__Cost__: The cost of this phase is therefore 2(M + N). In the second phase we scan each partition once, assuming no partition overflows, at a cost of M + N I/Os. The total cost is therefore 3(M + N ),
+
 ### Pipelined Evaluation
 - When a query is composed of several operators, the result of one operator is sometimes pipelined to another operator without creating a temporary relation to hold the intermediate result.
 - Pipelining the output of an operator into the next operator saves the cost of writing out the intermediate result and reading it back in, and the cost savings can be significant.
@@ -513,9 +517,19 @@ operator is applied on-the-fly.
 
 ![Pipeline](img/psel.png)
 
-### Using Indexes
+### Using Indexes, Query Trees and Plans
 ![Pipeline](img/pindex.png)
 
 
-### Query Trees and Plans
+---
+## Data Warehouse and Decision Support
+__Decision Support__: Current and historical data are comprehensively analyzed and explored, identifying useful trends and creating summaries of the data, in order to support high-level decision making. 
+
+__Data Warehouses__: Contain data drawn from several databases maintained by different business units, together with historical and summary information; help with the organizational decision making of an enterprise. The availability of a warehouse facilitates the application of OLAP and data mining tools, and conversely, the desire to apply such analysis tools is a strong motivation for building a data warehouse.
+
+![Data Warehose](img/warehouse.png)
+
+### Online Transaction Processing (OLTP) 
+
+### Online Analytic Processing (OLAP)
 
