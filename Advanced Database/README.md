@@ -529,7 +529,45 @@ __Data Warehouses__: Contain data drawn from several databases maintained by dif
 
 ![Data Warehose](img/warehouse.png)
 
-### Online Transaction Processing (OLTP) 
+### Online Transaction Processing (OLTP) VS Online Analytic Processing (OLAP)
+![OLAP](img/olap.png)
 
-### Online Analytic Processing (OLAP)
+### Business Intelligence: 3 Major Areas
+- __Data Warehousing__: Consolidate data from many sources into one large, well-organized repository
+	- For convenience, there may be subsets of the data warehouse called data marts. These are often tied to an individual department rather than to the organization
+	- Integrate operational OLTP databases, load data through periodic updates and must handle conflicts in schemas, semantics, platforms, integrity constraints, etc.
+	- Data clean may take up to 80% of the ETL effort
+- __OLAP__: Perform complex SQL queries and views, including trend analysis, drilling down for more details, and rolling up to provide more easily understood summaries
+	- Perform interactive, exploratory data analysis, queries are based on spreadsheet-style operations
+- __Data Mining__: Search for interesting trends (patterns) and anomalies (e.g., outliers, deviations) using more sophisticated algorithms.
+
+The goal of business intelligence is to make strategic business decisions that improve sales, profits, response times, customer satisfaction, customer relationships, etc.
+
+- Deciding what products to stock
+- Deciding what products to put on sale, or what promotions to offer
+- Deciding to focus on specific product lines and services, discontinuing others
+- Estimating the lift provided by a promotion by comparing the total sales of related products and services during a period of time vs. the total sales normally.
+
+### Answering Queries Quickly
+- Better to give an approximate answer quickly, than an exact answer n minutes later
+- Precompute and store (materialize) some answers
+	- Use a Data Cube to summarize and aggregate data
+	- Smaller intermediate relations (views) may already contain the data that a user wants
+
+- The multidimensional model extends the RDBMS model, and uses fact tables and dimension tables.
+- The main relation, which relates dimensions to a measure via foreign keys, is called the fact table.
+- Dimension tables are small; updates/inserts/deletes are relatively less frequent.
+- __Star Schema__: “Star”: A central hub (fact table) with all kinds of spokes coming from it (dimension tables).
+- Star schemas are dimensional models or structures that are implemented in an RDBMS; OLAP cubes are dimensional models or structures that are implemented in multidimensional DB environments.
+- Begin with a star schema and then build OLAP cubes from the star schema
+- OLAP cubes may have substantial performance and analysis benefits
+
+### Dimension Hierarchies
+![OLAP](img/dim.png)
+
+### Multidimensional Data Model
+- __Definition__: Collection of numeric measures, which depend on a set of dimensions
+- e.g., measure Sales by dimensions: Products (key: pid), Locations (locid), and Times (timeid)
+	- The sale amount for a specific product, given a location and time.
+
 
