@@ -527,6 +527,8 @@ __Decision Support__: Current and historical data are comprehensively analyzed a
 
 __Data Warehouses__: Contain data drawn from several databases maintained by different business units, together with historical and summary information; help with the organizational decision making of an enterprise. The availability of a warehouse facilitates the application of OLAP and data mining tools, and conversely, the desire to apply such analysis tools is a strong motivation for building a data warehouse.
 
+- A data warehouse is just a collection of asynchronously replicated tables and periodically maintained views.
+
 ![Data Warehose](img/warehouse.png)
 
 ### Online Transaction Processing (OLTP) VS Online Analytic Processing (OLAP)
@@ -569,5 +571,61 @@ The goal of business intelligence is to make strategic business decisions that i
 - __Definition__: Collection of numeric measures, which depend on a set of dimensions
 - e.g., measure Sales by dimensions: Products (key: pid), Locations (locid), and Times (timeid)
 	- The sale amount for a specific product, given a location and time.
+- A data cube is an k-dimensional object containing both fact data and dimensions, it contains pre-calculated, aggregated, summary information to yield very fast queries.
+- A cube supports slice and dice, roll-up, and drill-down operations.
+- We build cubes after completing the ETL process— after the data has been cleaned and after the FK relationships have been confirmed.
+- The small, individual blocks in the multidimensional cube are called cells, and each cell is uniquely identified by the members from each dimension.
+	- The cells contain a measure group, which consists of one or more numeric measures. 
 
+![OLAP](img/lattice.png)
+
+### Star Join
+- A complete star join:
+
+```sql 
+SELECT *
+FROM SalesFact SF, Auto A, Date DT, Dealer D 
+WHERE SF.serialNo = A.serialNo AND
+					SF.date = D.dateID AND
+					SF.dealer = D.name;
+```
+
+### The CUBE Operator
+
+- GROUP BY CUBE Example:
+
+```sql 
+SELECT color, state, month, sum(quantity) 
+FROM Sales
+GROUP BY CUBE (color, state, month);
+```
+
+- This yields a GROUP BY for all 8 subsets (i.e., all possible GROUP BYs).
+
+### Materialized View
+```sql
+CREATE MATERIALIZED VIEW SalesCube AS
+	SELECT model, color, month, state, sum(price) as value, count(*) as quantity
+	FROM SalesFact SF, Auto A, Date DT, Dealer D 
+	WHERE SF.serialNo = A.serialNo AND
+				SF.date = D.dateID AND
+				SF.dealer = D.name
+	GROUP BY CUBE (model, color, month, state);
+```
+
+- A materialized view has one or more dimensions along with the fact table
+
+### MOLAP vs ROLAP vs HOLAP
+- Multidimensional data can be stored physically in a (disk-resident, persistent) multi-dimensional array, called a MOLAP system.
+- Alternatively, we can store all data as relations; this is called a ROLAP system.
+- HOLAP (Hybrid OLAP)—a combination of MOLAP and ROLAP: the source data remains in ROLAP, but all aggregated data is stored in MOLAP.
+- Almost always, choose MOLAP.
+	- It gives the best query performance.
+	- Disks are very cheap today, and have a very large storage capacity.
+
+### Views and Decision Support
+- OLAP queries are typically aggregate queries.
+	- Pre-computation is essential for interactive response times.
+	- The CUBE is in fact a collection of aggregate queries, and pre-computation is especially important. A lot of research exists on what is best to pre-compute given a limited amount of space to store pre- computed results.
+- A data warehouse can be thought of as a collection of asynchronously replicated tables and periodically maintained views.
 
