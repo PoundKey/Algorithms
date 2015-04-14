@@ -629,3 +629,15 @@ CREATE MATERIALIZED VIEW SalesCube AS
 	- The CUBE is in fact a collection of aggregate queries, and pre-computation is especially important. A lot of research exists on what is best to pre-compute given a limited amount of space to store pre- computed results.
 - A data warehouse can be thought of as a collection of asynchronously replicated tables and periodically maintained views.
 
+### 4 Major OLAP Sub-Problems
+- View size estimation
+- Materialized view selection
+- Materialized view maintenance
+- View/query optimization
+
+![OLAP](img/lstruct.png)
+
+- HRU Algorithm Overview:
+	- For each iteration, determine which view (and its descendents) will benefit the most, if that view were to be materialized. Materialize it, and take it into account in subsequent iterations. 
+
+![OLAP](img/hrud.png)
