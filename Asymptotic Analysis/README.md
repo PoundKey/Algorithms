@@ -15,7 +15,7 @@
 
 - - -
 
-### Induction (format)
+### Induction (Format)
 - Prove: 1 + 2 + 3 + ... + n = n(n+1)/2
 - Step before: Identify the variable (eg. var is __n__ in this case)
 - Base case: n = 1, 1 = 1
@@ -24,6 +24,21 @@
 - This concludes our inductive proof. Therefore 1 + 2 + 3 + ... + n = n(n+1)/2
 
 QED
+
+### Induction Example
+Suppose you begin with a pile of n stones, and split this pile into n piles of one stone each by successively splitting a pile of stones into two smaller piles. Each time you split a pile you multiply the number of stones in each of the two smaller piles you form, so that if these piles have r and s stones in them, respectively, you compute r x s. Show that no matter how you split the pile, the sum of the products computed at each step equals n(n-1)/2. Here is an example that shows how the computation proceeds:
+
+![Induction](img/tree.jpg)
+
+The sum is 21+2+12+1+3+2+2+1+1 = 45, which is indeed 10 * 9 / 2
+
+#### Proof By Induction
+- Base case: n=1, Sum = 0
+- Inductive Hypothesis: Let n=k, for all n=s that is smaller than k, it's true that the sum equals to s(s-1)/2
+- inductive Steps: 
+	- Let's split k into two piles, one contains x piles and another contains (k-x) piles
+	- The sum of the two sub-piles: x(x-1)/2 + (k-x)(k-x-1)/2 + x(k-x) = k(k-1)/2
+	- This concludes our inductive proof. Therefore for n stones, the sum is n(n-1)/2
 
 - - -
 
