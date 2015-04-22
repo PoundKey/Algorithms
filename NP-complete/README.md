@@ -35,8 +35,19 @@
 
 #### Travelling Salesman Problem
 -  “Given a weighted graph G and an integer k, does G have a tour that visits all the vertices and has total length at most k?”
-- We may not know how to find such a tour quickly, but if someone gave such a tour to us, we could easily check if it satisfied the desired conditions
+- We may not know how to find such a tour quickly, but if someone gave such a tour to us, we could easily check if it satisfied the desired conditions.
 - if the answer is YES, then there exists a polynomial-length proof that can be checked in polynomial time — is called NP.
+- V(I, X), I = instance, X = witness, in this example the witness is the tour.
 
 > __Wikipedia__: The travelling salesman problem (TSP) asks the following question: Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city? (NP-Hard Problem)
 
+### Existence of a verifiable Solution Problem (ESP)
+- The input to this problem is in three parts. The first part is a program V(I,X), written in some standard programming language, that has two arguments.1 The second part is a string I intended as a first argument, and the third part is a bound b written in unary (a string of b 1s). Question: does there exist a string X, |X| ≤ b, such that V(I, X) halts in at most b steps and outputs YES? 
+- __ESP__: ESP is NP-Complete
+- __Proof__: What we will show is that (a) ESP ∈ NP and (b) for any problem Q∈NP we have Q ≤<sub>p</sub> ESP.
+	- (a) why is ESP ∈ NP? This is the reason for the bound b written in unary. If we didn’t have b at all, then (since we can’t even in general tell if a program is ever going to halt) the ESP question would not even be computable. However, with the bound b, if the answer is YES, then there is a short proof (namely the string X) that we can check in polynomial time (just run V (I, X) for b steps). The reason we ask for b to be written in unary is precisely so that this check counts as being polynomial time: if b were in binary, then this check could take time exponential in the number of bits in the input
+	- (b) why is it the case that for any problem Q ∈ NP we have Q ≤<sub>p</sub> ESP? Consider some NP problem we might want to solve like 3-Coloring. We don’t know any fast ways of solving that problem, but we can easily write a program V that given inputs I = G and X = an assignment of colors to the vertices, verifies whether X indeed satisfies our requirements (uses at most three colors and gives no two adjacent vertices the same color). Furthermore, this solution-verifier is linear time. So, if we had an algorithm to solve the ESP, we could feed in this V , feed in the graph G, feed in a bound b that is linear in the size of G, and solve the 3-Coloring problem. Similarly, we could do this for the Traveling Salesman Problem: program V , given inputs I = (G, k) and X = a description of a tour through G, just verifies that the tour indeed has length at most k and visits all the vertices. More generally, we can do this for any problem Q in NP. By definition of NP, YES-instances of Q must have short proofs that can be easily checked: i.e., they must have such a solution-verifier V that we can plug into our magic ESP algorithm.
+	- Thus, we have shown that ESP satisfies both conditions (a) and (b) and therefore is NP-complete.
+
+### 3-Coloring Problem
+//TODO
