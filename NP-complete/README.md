@@ -16,6 +16,27 @@
 - What's NP-hard
 	- NP-Hard are problems that are at least as hard as the hardest problems in NP. Note that NP-Complete problems are also NP-hard. However not all NP-hard problems are NP (or even a decision problem), despite having 'NP' as a prefix. That is the NP in NP-hard does not mean 'non-deterministic polynomial time'.
 
+### Formal Definitions
+- A __problem__ means something like 3-coloring or network flow, and an __instance__ means a specific instance of that problem: the graph to color, or the network and distinguished nodes s and t we want to find the flow between. 
+- A __decision problem__ is just a problem where each instance is either a YES-instance or a NO-instance, and the goal is to decide which type your given instance is. For example, for the Traveling Salesman Problem, an instance consists of a graph G together with an integer k, and the pair (G, k) is a YES-instance iff G has a TSP tour of total length at most k.
+- __P__: The class of decision problems Q that have polynomial-time algorithms. Q ∈ P if there exists a polynomial-time algorithm A such that A(I) = YES iff I is a YES-instance of Q.
+- __NP__: The class of decision problems where at least the YES-instances have short proofs (that can be checked in polynomial-time). Q ∈ NP if there exists a verifier V (I, X) such that:
+	- If I is a YES-instance, then there exists X such that V (I , X ) = YES,
+	- If I is a NO-instance, then for all X, V (I,X) = NO,
+	- and furthermore the length of X and the running time of V are polynomial in |I|.
+- __NP-Complete__: A problem Q is NP-complete if: 
+	1. Q ∈ NP, and
+	2. Any other Q′ in NP is polynomial-time reducible to Q; that is, Q′ ≤<sub>p</sub> Q.
+- If Q just satisfies (2) then it’s called __NP-hard__.
+
+- __Reduction__: A Problem A is poly-time reducible to problem B (written as A ≤<sub>p</sub>  B) if we can solve problem A in polynomial time given a polynomial time black-box algorithm for problem B. Problem A is poly-time equivalent to problem B (A =<sub>p</sub> B) if A ≤<sub>p</sub> B and B ≤<sub>p</sub> A.
 
 ### Examples
+
+#### Travelling Salesman Problem
+-  “Given a weighted graph G and an integer k, does G have a tour that visits all the vertices and has total length at most k?”
+- We may not know how to find such a tour quickly, but if someone gave such a tour to us, we could easily check if it satisfied the desired conditions
+- if the answer is YES, then there exists a polynomial-length proof that can be checked in polynomial time — is called NP.
+
+> __Wikipedia__: The travelling salesman problem (TSP) asks the following question: Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city? (NP-Hard Problem)
 
