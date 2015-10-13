@@ -77,7 +77,7 @@ void merge(int x[], int lo, int mid, int hi, int tmp[]) {
 	int a=lo, b=mid+1;
 	for (int k=lo; k<=hi; k++) {
 		if (a <= mid && (b > hi || x[a] < x[b]))
-			tmp[k] = x[b++];
+			tmp[k] = x[a++];
 		else 
 			tmp[k] = x[b++];
 	}
