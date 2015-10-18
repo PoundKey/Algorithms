@@ -8,10 +8,10 @@ public:
     int reverse(int x) {
        int result = 0;
        while (x > 0) {
-           if (result > INT_MAX) return 10; //let 10 be the identifer when the input overflows
+				 if (abs(result) > INT_MAX/10) return 10; //let 10 be the identifer when the input overflows
            result = result*10 + x%10;
            x = x/10;
        }
        return result;
     }
-	};
+};
