@@ -6,7 +6,7 @@ public:
         int j = 0, count = 0;
         for (int i=1; i < nums.size(); i++) {
             if (nums[i] == nums[j]) {
-            	count++;
+            		count++;
                 if (count < 2) {
                     nums[++j] = nums[i];
                 }
