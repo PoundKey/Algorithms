@@ -12,18 +12,29 @@ public:
     }
 };
 
-// Thoughts: Runtime O(1) Brute force solution
+// Thoughts: Compute the different and accumulate to result.
 class Solution {
 public:
     int missingNumber(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        int n = nums.size() + 1;
-        int i = 0;
-        while (i < n) {
-            if (nums[i] != i) 
-                return i;
-            else
-                i++;
+        int result = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            result += i - nums[i];
         }
+        return result + nums.size();
+    }
+};
+
+// Thought: Bit manipulation: (a^b)^b = a
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int result = 0;
+        for (int i=1; i < nums.size()+1; i++) {
+            result ^= i;
+        }
+        for (int j=0; j < nums.size(); j++) {
+            result ^= nums[j];
+        }
+        return result;
     }
 };
