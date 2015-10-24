@@ -13,12 +13,12 @@ public:
         DFS(root, NULL);
     }
     
-    void DFS(TreeLinkNode* root, TreeLinkNode* target) {
+    void DFS(TreeLinkNode* root, TreeLinkNode* next) {
         if (root == NULL) return;
-        root->next = target;
+        root->next = next;
         DFS(root->left, root->right);
-        if (root->next) {
-            DFS(root->right, root->next->left);
+        if (next) {
+            DFS(root->right, next->left);
         } else {
             DFS(root->right, NULL);
         }
