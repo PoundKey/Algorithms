@@ -30,3 +30,24 @@ public:
         return dummy->next;
     }
 };
+
+
+// Recursive Version
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (head == NULL || head->next == NULL) return head;
+        ListNode* prev = head;
+        ListNode* curr = prev->next;
+        if (prev->val == curr->val) {
+            int val = curr->val;
+            while (curr && curr->val == val) {
+                curr = curr->next;
+            }
+            return deleteDuplicates(curr);
+        } else {
+            prev->next = deleteDuplicates(curr);
+            return prev;
+        }
+    }
+};
