@@ -32,3 +32,21 @@ public:
         return dp[n];
     }
 };
+
+// Thoughts: well...
+class Solution {
+public:
+    int climbStairs(int n) {
+        if (n <= 0) return 0;
+        vector<int> memo(n + 1, 0);
+        return DP(n, memo);
+    }
+    
+    int DP(int n, vector<int>& memo) {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        if (memo[n]) return memo[n];
+        memo[n] = DP(n-1, memo) + DP(n-2, memo);
+        return memo[n];
+    }
+};
