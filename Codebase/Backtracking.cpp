@@ -3,41 +3,6 @@
 #include <string>
 using namespace std;
 
-// Backtracking Template
-// Source: http://www.fas.harvard.edu/~cscie119/lectures/recursion.pdf
-// Template for Recursive Backtracking
-void findSolutions(n, other params) {
-	if (found a solution) {
-		solutionsFound++;
-		displaySolution();
-		if (solutionsFound >= solutionTarget) System.exit(0);
-		return;
-	}  
-	for (val = first to last) {
-	if (isValid(val, n)) {
-		applyValue(val, n);
-		findSolutions(n + 1, other params);
-		removeValue(val, n);
-	}
-  }
-}
-
-// Template for Finding a Single Solution
-boolean findSolutions(n, other params) {
-	if (found a solution) {
-		displaySolution();
-		return true;
-	}      
-	for (val = first to last) {
-		if (isValid(val, n)) {
-		applyValue(val, n);
-		if (findSolutions(n + 1, other params)) return true;
-		removeValue(val, n);
-		}
-	}
-	return false;
-}
-
 //Java Edition
 public class Backtrack {
     public static List<List<Object>> backtrack(int[] A) {
@@ -95,4 +60,39 @@ public class Backtrack {
             unmakeMove(solution, A[i]);
         }
     }
+}
+
+// Backtracking Template
+// Source: http://www.fas.harvard.edu/~cscie119/lectures/recursion.pdf
+// Template for Recursive Backtracking
+void findSolutions(n, other params) {
+	if (found a solution) {
+		solutionsFound++;
+		displaySolution();
+		if (solutionsFound >= solutionTarget) System.exit(0);
+		return;
+	}  
+	for (val = first to last) {
+	if (isValid(val, n)) {
+		applyValue(val, n);
+		findSolutions(n + 1, other params);
+		removeValue(val, n);
+	}
+  }
+}
+
+// Template for Finding a Single Solution
+boolean findSolutions(n, other params) {
+	if (found a solution) {
+		displaySolution();
+		return true;
+	}      
+	for (val = first to last) {
+		if (isValid(val, n)) {
+		applyValue(val, n);
+		if (findSolutions(n + 1, other params)) return true;
+		removeValue(val, n);
+		}
+	}
+	return false;
 }

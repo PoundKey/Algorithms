@@ -10,26 +10,26 @@
 class Solution {
 public:
     RandomListNode *copyRandomList(RandomListNode *head) {
-        RandomListNode *dummy = new RandomListNode(0);
-        RandomListNode *p = dummy, *it = head;
-        unordered_map<RandomListNode*, RandomListNode*> dic;
-        while (it) {
-            RandomListNode* node = new RandomListNode(it->label);
-            node->random = it->random;
-            dic[it] = node;
+        if (!head) return NULL;
+        RandomListNode* dummy = new RandomListNode(0), *p = dummy;
+        unordered_map<RandomListNode*, RandomListNode*> ht;
+        
+        while (head) {
+            RandomListNode* node = new RandomListNode(head->label);
+            node->random = head->random;
+            ht[head] = node;
             p->next = node;
             p = p->next;
-            it = it->next;
+            head = head->next;
         }
         
-        it = dummy->next;
-        while (it) {
-            if (it->random) {
-                it->random = dic[it->random];
+        p = dummy->next;
+        while (p) {
+            if (p->random) {
+                p->random = ht[p->random];
             }
-            it = it->next;
+            p = p->next;
         }
-        
         return dummy->next;
     }
 };

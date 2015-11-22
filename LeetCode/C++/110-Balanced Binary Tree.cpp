@@ -26,3 +26,21 @@ public:
         return max(left, right) + 1;
     }
 };
+
+// Anohter time-efficient code
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        return DFS(root) == -1 ? false : true;
+    }
+    
+    int DFS(TreeNode* root) {
+        if (!root) return 0;
+        int leftDepth = DFS(root->left);
+        if (leftDepth == -1) return -1;
+        int rightDepth = DFS(root->right);
+        if (rightDepth == -1) return -1;
+        if (abs(leftDepth - rightDepth) > 1) return -1;
+        return max(leftDepth, rightDepth) + 1;
+    }
+};
