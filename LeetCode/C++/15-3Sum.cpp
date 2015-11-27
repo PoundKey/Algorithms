@@ -3,31 +3,25 @@
 // Key is to skip i if A[i-1] == A[i], same for return val from 2sum
 class Solution {
 public:
-    vector<vector<int> > threeSum(vector<int> &num) {
-        vector< vector<int> > sol;
-        if (num.size() < 3) return sol;
-        sort(num.begin(), num.end());
-        
-        for (int i=0; i < num.size()-2; i++) {
-            if (i>0 && num[i] == num[i-1]) continue;
-            int target = 0 - num[i];
-            int start = i + 1;
-            int end = num.size() - 1;
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        if (nums.size() < 3) return res;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; i++) {
+            if (i > 0 && nums[i] == nums[i-1]) continue;
+            int target = 0 - nums[i];
+            int start = i + 1, end = nums.size() - 1;
             while (start < end) {
-                 int sum = num[start] + num[end];
-                 if (sum == target) {
-                    vector<int> entry;
-                    entry.push_back(num[i]);
-                    entry.push_back(num[start++]);
-                    entry.push_back(num[end--]);
-                    sol.push_back(entry);
-                    while(num[start] == num[start-1]) start++;
-                    while(num[end] == num[end+1]) end--;
-                } else if (sum < target) {
+                int sum = nums[start] + nums[end];
+                if (target == sum) {
+                    res.push_back(vector<int> {nums[i], nums[start++], nums[end--]});
+                    while (nums[start] == nums[start-1]) start++;
+                    while (nums[end] == nums[end+1]) end--;
+                } else if (target > sum) {
                     start++;
                 } else {
                     end--;
-                }              
+                }
             }
         }
     }

@@ -71,3 +71,18 @@ void DFS(string s) {
     }
 }
 
+// Split a string to vector, given a delimiter
+vector<string> split(string s, char del) {
+    int n = s.size(), i = 0, j = 0;
+    vector<string> res;
+    while (j <= n) {
+        if (s[j] == del || j == n) {
+            res.push_back(s.substr(i, j - i));
+            j += 1;
+            i = j;
+        }
+        j++;
+    }
+    return res;
+}
+
