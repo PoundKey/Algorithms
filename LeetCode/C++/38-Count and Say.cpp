@@ -1,4 +1,4 @@
-// Thoughts: Don't think to deep. A[i] is based on A[i-1]'s pronounciation.
+// Thoughts: Don't think too deep. A[i] is based on A[i-1]'s pronounciation.
 // Have two variables keep track of the the prev character and count.
 // Once the prev haracter changed when scanning, append count + prev char.
 class Solution {

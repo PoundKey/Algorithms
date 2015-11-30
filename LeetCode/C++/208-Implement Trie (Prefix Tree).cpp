@@ -37,19 +37,19 @@ public:
 
     // Inserts a word into the trie.
     void insert(string word) {
-        root->insert(word, 0);
+        root->insert(word);
     }
 
     // Returns if the word is in the trie.
     bool search(string word) {
-        TrieNode* node = root->find(word, 0);
+        TrieNode* node = root->find(word);
         return (node != NULL && node->count > 0);
     }
 
     // Returns if there is any word in the trie
     // that starts with the given prefix.
     bool startsWith(string prefix) {
-        TrieNode* node = root->find(prefix, 0);
+        TrieNode* node = root->find(prefix);
         return node != NULL;
     }
 
@@ -57,5 +57,61 @@ private:
     TrieNode* root;
 };
 
-// Thoughts: Use a hashmap to store char : TrieNode pair
-// TODO
+// Thoughts: Use a hashmap to store char : TrieNode* pair
+class TrieNode {
+public:
+    // Initialize your data structure here.
+    int count;
+    unordered_map<char, TrieNode*> children;
+    
+    TrieNode() : count(0) {
+        children.clear();
+    }
+    
+    void insert(string word, int index = 0) {
+        if (index == word.size()) {
+            this->count++;
+            return;
+        }
+        char c = word[index];
+        if (!children.count(c)) {
+            children[c] = new TrieNode();
+        }
+        children[c]->insert(word, index + 1);
+    }
+    
+    TrieNode* find(string word, int index = 0) {
+        if (index == word.size()) return this;
+        char c = word[index];
+        if (!children.count(c)) return NULL;
+        return children[c]->find(word, index + 1);
+    }
+};
+
+class Trie {
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    void insert(string word) {
+        root->insert(word);
+    }
+
+    // Returns if the word is in the trie.
+    bool search(string word) {
+        TrieNode* node = root->find(word);
+        return (node != NULL && node->count > 0);
+    }
+
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    bool startsWith(string prefix) {
+        TrieNode* node = root->find(prefix);
+        return node != NULL;
+    }
+
+private:
+    TrieNode* root;
+};

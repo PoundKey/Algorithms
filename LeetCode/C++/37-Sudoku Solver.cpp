@@ -1,15 +1,24 @@
+// Thoughts: 
 class Solution {
 public:
-    bool isValidSudoku(vector<vector<char>>& board) {
-        if (board.size() != 9 || board[0].size() != 9) return false;
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (!isdigit(board[i][j])) continue;
-                if (!isValid(board, i, j)) return false;
-            }
-        }
-        return true;
+    void solveSudoku(vector<vector<char>>& board) {
+        if (board.size() != 9 || board[0].size() != 9) return;
+        DFS(board, 0, 0);
     }
+    
+    bool DFS(vector<vector<char>>& board, int i, int j) {
+        if (i == 9) return true;
+        if (j == 9) return DFS(board, i + 1, 0);
+        if (board[i][j] != '.') return DFS(board, i, j + 1);
+        // up to this point, board[i][j] == '.', let's try all digits from 1-9
+        for (int val = 1; val <= 9; val++) {
+            board[i][j] = val + '0';
+            if (isValid(board, i, j) && DFS(board, i, j + 1)) return true;
+        }
+        board[i][j] = '.';
+        return false;
+    }
+    
     bool isValid(vector<vector<char>>& board, int i, int j) {
         char val = board[i][j];
         for (int col = 0; col < 9; col++) {
@@ -25,7 +34,7 @@ public:
             for (int n = col; n < col + 3; n++) {
                 if (m == i && n == j) continue;
                 if (board[m][n] == val) return false;
-            }
+             }
         }
         return true;
     }
