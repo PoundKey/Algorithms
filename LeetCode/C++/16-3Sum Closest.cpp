@@ -5,25 +5,17 @@
 class Solution {
 public:
     int threeSumClosest(vector<int>& nums, int target) {
+        int n = nums.size(), minDiff = INT_MAX;
         sort(nums.begin(), nums.end());
-        int minDiff = INT_MAX;
-        for (int i=0; i < nums.size()-2; i++) {
-            int start = i + 1;
-            int end = nums.size() - 1;
+        for (int i = 0; i < n - 2; i++) {
+            int start = i + 1, end = n - 1;
             while (start < end) {
                 int sum = nums[i] + nums[start] + nums[end];
                 int diff = sum - target;
-                if (abs(diff) < abs(minDiff)) {
-                    minDiff = diff;
-                }
-                if (diff == 0) {
-                    minDiff = 0;
-                    break;
-                } else if (diff < 0) {
-                    start++;
-                } else {
-                    end--;
-                }
+                if (abs(diff) < abs(minDiff)) minDiff = diff;
+                if (diff == 0) return target;
+                else if (diff < 0) start++;
+                else end--;
             }
         }
         return target + minDiff;
