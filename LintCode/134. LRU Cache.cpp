@@ -84,7 +84,7 @@ public:
         //  1.3 update the cache map
         // 2. if LRUCache is not full
         //  2.1 insert into the cache, and make it most recent used cache
-        //  2.2 update the cache map and capacity
+        //  2.2 update the cache map
         if (isFull())
         {
             Node* node = new Node(key, value);
@@ -124,5 +124,90 @@ public:
             }
             cacheMap[key] = node;
         }
+    }
+};
+
+
+// alternative solution using deque and map
+struct Node 
+{
+    int key;
+    int value;
+    Node(int in_key, int in_value) :
+    key(in_key), value(in_value)
+    {
+        
+    }
+};
+
+class LRUCache {
+public:
+    int m_capacity;
+    unordered_map<int, Node*> cacheMap;
+    deque<Node*> queue;
+    /*
+    * @param capacity: An integer
+    */LRUCache(int capacity) : m_capacity(capacity)
+    {
+        
+    }
+
+    void updateCache(Node* node)
+    {
+        if (node == NULL) return;
+        auto iter = find(queue.begin(), queue.end(), node);
+        if (iter == queue.end() || iter == queue.end() - 1) return;
+        queue.erase(iter);
+        queue.push_back(node);
+    }
+    /*
+     * @param key: An integer
+     * @return: An integer
+     */
+    int get(int key) {
+        // 1. access the cached items map
+        // 2. update the key as the most recent used cache
+        if (!cacheMap.count(key)) return -1;
+        Node* node = cacheMap[key];
+        updateCache(node);
+        return node->value;
+    }
+    
+    bool isFull()
+    {
+        return cacheMap.size() >= m_capacity;
+    }
+    /*
+     * @param key: An integer
+     * @param value: An integer
+     * @return: nothing
+     */
+    void set(int key, int value) {
+        if (m_capacity <= 0) return;
+        if (cacheMap.count(key))
+        {
+            cacheMap[key]->value = value;
+            // update an existing cache also makes it most recently used
+            updateCache(cacheMap[key]); 
+            return;
+        }
+        // 1. if LRUCache is full
+        //  1.1 remove the least recent used cache - head
+        //  1.2 insert key and value to the cache, make it the most recent used cache
+        //  1.3 update the cache map
+        // 2. if LRUCache is not full
+        //  2.1 insert into the cache, and make it most recent used cache
+        //  2.2 update the cache map 
+        Node* node = new Node(key, value);
+        
+        if (isFull())
+        {
+            Node* head = queue.front();
+            cacheMap.erase(head->key);
+            queue.pop_front();
+        }
+        
+        queue.push_back(node);
+        cacheMap[key] = node;
     }
 };
