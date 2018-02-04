@@ -34,4 +34,45 @@ public:
         res += to_string(sol[n-1]);
         return res;
     }
+    
+    /* key to BFS
+       1. foreach node being visited, need additional filed or container to hold its previous path. e.g., pair<field, Node*>
+       2. foreach iteration, BFS always deals with nodes that are in the same level
+       3. update the field in pair<field, Node*> when push nodes to the queue.
+    */
+    void BFS(TreeNode* root)
+    {
+        if (root == NULL) return;
+        vector<string> res;
+        queue<pair<vector<int>, TreeNode*>> q;
+        q.push(make_pair(vector<int>{}, root));
+        while (!q.empty())
+        {
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                vector<int> vec = q.front().first;
+                TreeNode* node = q.front().second;
+                q.pop();
+                if (node->left == NULL && node->right == NULL)
+                {
+                    vec.push_back(node->val);
+                    res.push_back(genPath(vec));
+                    continue;
+                }
+                vec.push_back(node->val);
+                if (node->left)
+                {
+                    pair<vector<int>, TreeNode*> p(vec, node->left);
+                    q.push(p);
+                }
+                if (node->right)
+                {
+                    pair<vector<int>, TreeNode*> p(vec, node->right);
+                    q.push(p);                    
+                }
+            }
+
+        }
+    }
 };
