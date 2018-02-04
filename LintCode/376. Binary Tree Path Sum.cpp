@@ -44,4 +44,56 @@ public:
         traverse(root->right, res, sol, target - val);
         sol.pop_back();
     }
+    
+    /* Solution using BFS *
+    struct Path 
+    {
+        vector<int> path;
+        TreeNode* node;
+        int target;
+        
+        Path(const vector<int>& in_path, TreeNode* in_node, int in_target) :
+        path(in_path), node(in_node), target(in_target)
+        {
+            
+        }
+    };
+    
+    vector<vector<int>> BFS(TreeNode *root, int target)
+    {
+        vector<vector<int>> res;
+        if (root == NULL) return res;
+        
+        queue<Path> q;
+        q.push(Path(vector<int>{}, root, target));
+        
+        while (!q.empty())
+        {
+            int n = q.size();
+            for (int i = 0; i < n; i++)
+            {
+                vector<int> path = q.front().path;
+                TreeNode* node = q.front().node;
+                int t = q.front().target;
+                q.pop();
+                if (node->left == NULL && node->right == NULL && node->val == t)
+                {
+                    path.push_back(node->val);
+                    res.push_back(path);
+                    continue;
+                }
+                path.push_back(node->val);
+                t = t - node->val;
+                if (node->left)
+                {
+                    q.push(Path(path, node->left, t));
+                }
+                if (node->right)
+                {
+                    q.push(Path(path, node->right, t));
+                }
+            }
+        }
+        return res;
+    }
 };
