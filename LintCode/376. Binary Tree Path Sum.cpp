@@ -45,7 +45,10 @@ public:
         sol.pop_back();
     }
     
-    /* Solution using BFS *
+    /* Solution using BFS */
+    // 1. need a sturcture to keep track of all the information such as path vector, node pointer and target
+    // 2. foreach iteration, we deal with nodes that are in the same level (BFS)
+    // 3. consumes lots of space, not recommended
     struct Path 
     {
         vector<int> path;
