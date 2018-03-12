@@ -10,9 +10,6 @@
 
 // CountingPrincipal.cpp : Defines the entry point for the console application.
 
-// CountingPrincipal.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
 #include <iostream>
 #include <string>
@@ -43,7 +40,7 @@ void Substring(char A[], int n)
 {
 	// substring combination
 	for (int i = 0; i < n; i++)
-	{
+    {
 		string str = "";
 		for (int j = i; j < n; j++)
 		{
