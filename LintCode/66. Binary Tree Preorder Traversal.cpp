@@ -1,9 +1,28 @@
 class Solution {
 public:
-    /**
-     * @param root: The root of binary tree.
-     * @return: Preorder in vector which contains node values.
-     */
+    // iterative
+    vector<int> preorderTraversal(TreeNode *root) {
+        vector<int> res;
+        stack<TreeNode*> stack;
+        TreeNode* node = root;
+        while (!stack.empty() || node)
+        {
+            if (node)
+            {
+                res.push_back(node->val);
+                if (node->right) stack.push(node->right);
+                node = node->left;
+            }
+            else
+            {
+                node = stack.top();
+                stack.pop();
+            }
+        }
+        return res;
+    }
+    
+    // recursive
     vector<int> preorderTraversal(TreeNode *root) {
         vector<int> res;
         DFS(root, res);
