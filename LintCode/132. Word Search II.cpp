@@ -37,7 +37,7 @@ public:
     }
     /// brief destructor
     virtual ~TrieNode() {}
-private:
+public:
     unordered_map<char, TrieNode*> branches;
     int counter;
 };
@@ -55,17 +55,22 @@ public:
         int m = board.size(), n = board[0].size();
         TrieNode trie;
         string sol;
+        set<string> set;
         vector<vector<bool>> visited(m, vector<bool>(n, false));
-        for (auto iter = words.begin(); iter != words.end(); ++iter)
+        for (const auto& str : words)
         {
-            trie.Insert(*iter);
+            trie.Insert(str);
         }
         for (int i = 0; i < m; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                Search(board, words, res, sol, i, j, visited, trie);
+                Search(board, words, set, sol, i, j, visited, &trie);
             }
+        }
+        for (const auto& str : set)
+        {
+            res.push_back(str);
         }
         return res;
     }
@@ -73,29 +78,30 @@ public:
     void Search(
         const vector<vector<char>> &board, 
         const vector<string> &words, 
-        vector<string>& res, 
+        set<string>& set, 
         string& sol,
         int row,
         int col,
         vector<vector<bool>>& visited,
-        const TrieNode& trieNode)
+        TrieNode* trieNode)
         {
-            if (trieNode.Search(sol, true) && 
-                find(res.begin(), res.end(), sol) == res.end())
+            if (trieNode->counter > 0 && !set.count(sol))
             {
-                res.push_back(sol);
+                set.insert(sol);
             }
             if (row < 0 || col < 0 || row >= board.size() || col >= board[0].size() || 
-                visited[row][col] || trieNode.Search(sol) == false)
+                visited[row][col] || trieNode->branches.count(board[row][col]) == false)
             {
                 return;
             }
+            char c = board[row][col];
             visited[row][col] = true;
-            sol += board[row][col];
-            Search(board, words, res, sol, row + 1, col, visited, trieNode);
-            Search(board, words, res, sol, row - 1, col, visited, trieNode);
-            Search(board, words, res, sol, row, col + 1, visited, trieNode);
-            Search(board, words, res, sol, row, col - 1, visited, trieNode);
+            sol += c;
+            trieNode = trieNode->branches[c];
+            Search(board, words, set, sol, row + 1, col, visited, trieNode);
+            Search(board, words, set, sol, row - 1, col, visited, trieNode);
+            Search(board, words, set, sol, row, col + 1, visited, trieNode);
+            Search(board, words, set, sol, row, col - 1, visited, trieNode);
             sol.pop_back();
             visited[row][col] = false;
         }
