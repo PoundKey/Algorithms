@@ -59,6 +59,50 @@ public:
     }
 };
 
+// iterative way of implementing a trie tree
+class TrieNode {
+public:
+    int counter;
+    unordered_map<char, TrieNode*> branches;
+
+    TrieNode() : counter(0) {
+        branches.clear();
+    }
+    
+    void insert(string &word) {
+        // increase all the nodes count along the path
+        if (word.empty()) return;
+        
+        TrieNode* node = this;
+        for (const auto& c : word)
+        {
+            if ((node->branches).count(c) == false)
+            {
+                (node->branches)[c] = new TrieNode();
+            }
+            node = (node->branches)[c];
+        }
+        ++(node->counter);
+    }
+
+    bool search(string &word, bool matchWord = false) {
+        if (word.empty()) return true;
+        TrieNode* node = this;
+        for (const auto& c : word)
+        {
+            if (node->branches.count(c) == false) return false;
+            node = node->branches[c];
+        }
+        return matchWord ? node->counter > 0 : true;
+    }
+
+    bool startsWith(string &prefix) {
+        // search for the path, and verify that the node count for
+        // each character is > 0
+        if (prefix.empty()) return true;
+        return search(prefix);
+    }
+};
 
 class Trie {
 private:
