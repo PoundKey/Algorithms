@@ -95,6 +95,45 @@ public:
         return root;
     }
     
+    /** trying pre-order way, works pretty well. the CORE is that ## means the recursion will end. */
+    string serialize(TreeNode * root) {
+        string res;
+        if (root == NULL) return res;
+        
+        stack<TreeNode*> s;
+        vector<string> sol;
+        s.push(root);
+
+        while (!s.empty())
+        {
+            TreeNode* node = s.top();
+            s.pop();
+            if (node)
+            {
+                sol.push_back(to_string(node->val));
+                s.push(node->right);
+                s.push(node->left);
+            }
+            else
+            {
+                sol.push_back("#");
+            }
+        }
+        
+        for (int i = 0; i < sol.size(); i++)
+        {
+            string del = res.empty() ? "" : ",";
+            res += (del + sol[i]);
+        }        
+    }
+    
+    TreeNode * deserialize(string &data) {
+        if (data.empty()) return NULL;
+        vector<string> A = Split(data); 
+        int i = 0;
+        return Traverse(A, i);
+    }
+    
     vector<string> Split(string data)
     {
         vector<string> res;
