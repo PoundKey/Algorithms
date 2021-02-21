@@ -1,25 +1,46 @@
-// Thoughts: 
 class Solution {
 public:
     void solveSudoku(vector<vector<char>>& board) {
-        if (board.size() != 9 || board[0].size() != 9) return;
-        DFS(board, 0, 0);
+        if (board.size() != 9 || board[0].size() != 9) 
+        {
+            return;
+        }
+        backtrack(board, 0, 0);
     }
     
-    bool DFS(vector<vector<char>>& board, int i, int j) {
-        if (i == 9) return true;
-        if (j == 9) return DFS(board, i + 1, 0);
-        if (board[i][j] != '.') return DFS(board, i, j + 1);
-        // up to this point, board[i][j] == '.', let's try all digits from 1-9
-        for (int val = 1; val <= 9; val++) {
-            board[i][j] = val + '0';
-            if (isValid(board, i, j) && DFS(board, i, j + 1)) return true;
+    bool backtrack(vector<vector<char>>& board, int row, int col) 
+    {
+        static const int SIZE = 9;
+        if (SIZE == row)
+        {
+            return true;
         }
-        board[i][j] = '.';
+        
+        if (SIZE == col)
+        {
+            return backtrack(board, row + 1, 0);
+        }
+        
+        if (board[row][col] != '.')
+        {
+            return backtrack(board, row, col + 1);
+        }
+        
+        for (int val = 1; val <= 9; val++)
+        {
+            board[row][col] = val + '0';
+            if (isValid(board, row, col) && backtrack(board, row, col + 1))
+            {
+                return true;
+            }
+            board[row][col] = '.';
+        }
+        
         return false;
     }
     
-    bool isValid(vector<vector<char>>& board, int i, int j) {
+    bool isValid(vector<vector<char>>& board, int i, int j) 
+    {
         char val = board[i][j];
         for (int col = 0; col < 9; col++) {
             if (col == j) continue;
