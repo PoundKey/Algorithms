@@ -1,0 +1,35 @@
+class Solution {
+private:
+    vector<bool> visited;
+    int res;
+public:
+    int countArrangement(int n)
+    {
+        visited = vector<bool>(n, false);
+        res = 0;
+        countArrangement(n, 1);
+        return res;
+    }
+    
+    void countArrangement(int n, int pos)
+    {   
+        // 传进来的参数都是属于本次轮回的状态
+        if (pos > n)
+        {
+            res++;
+            return;
+        }
+        
+        for (int i = 1; i <= n; i++)
+        {
+            if (visited[i-1] || (pos % i && i % pos))
+            {
+                continue;
+            }
+
+            visited[i-1] = true;
+            countArrangement(n, pos + 1);
+            visited[i-1] = false;  
+        }
+    }
+};
