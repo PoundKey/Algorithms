@@ -378,4 +378,229 @@ public:
 ```
 
 ### Binary Search
+#### Regular Binary Search: First Occurrence + Last Occurence
+```cpp
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        int start = searchFirst(nums, target);
+        int end = searchLast(nums, target);
+        return vector<int>{start, end};
+    }
+    
+    int searchFirst(vector<int>& nums, int target)
+    {
+        int n = nums.size();
+        int start = 0, end = n - 1;
+        int res = -1;
+        
+        while (start <= end)
+        {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target)
+            {
+                res = mid;
+                end = mid - 1;
+            }
+            else if (nums[mid] > target)
+            {
+                end = mid - 1;
+            }
+            else 
+            {
+                start = mid + 1;
+            }
+        }
 
+        return res;
+    }
+    
+    int searchLast(vector<int>& nums, int target)
+    {
+        int n = nums.size();
+        int start = 0, end = n - 1;
+        int res = -1;
+        
+        while (start <= end)
+        {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target)
+            {
+                res = mid;
+                start = mid + 1;
+            }
+            else if (nums[mid] > target)
+            {
+                end = mid - 1;
+            }
+            else 
+            {
+                start = mid + 1;
+            }
+        }
+
+        return res;    
+    }
+};
+
+```
+#### Prefix Sum + Binary Search
+```cpp
+class Solution {
+private:
+    vector<int> d_prefixSum;
+public:
+    Solution(vector<int>& w) {
+        for (int i = 0; i < w.size(); i++)
+        {
+            // 打平成一个一维有序排列
+            // 1. 蛋糕的总数有多大 -> 线段总长度 sum
+            // 2. 群雄割据 -> everybody occupies part of the sum
+            int value = w[i];
+            if (d_prefixSum.empty())
+            {
+                d_prefixSum.push_back(value);
+            }
+            else
+            {
+                d_prefixSum.push_back(d_prefixSum.back() + value);
+            }
+        }
+            
+    }
+    
+    int pickIndex() {
+        if (d_prefixSum.empty())
+        {
+            return -1;
+        }
+        
+        int randnum = rand() % d_prefixSum.back() + 1;
+
+        auto it = std::lower_bound(d_prefixSum.begin(), d_prefixSum.end(), randnum);
+        
+        return it - d_prefixSum.begin();
+    }
+};
+
+```
+
+#### Search Space
+```cpp
+class Solution {
+public:
+    // 搜索区间定乾坤
+    // 33. Search in Rotated Sorted Array
+    int search(vector<int>& nums, int target) {
+        if (nums.empty())
+        {
+            return -1;
+        }
+        
+        int start = 0, end = nums.size() - 1;
+        
+        while (start <= end)
+        {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target)
+            {
+                return mid;
+            }
+            else if (nums[mid] >= nums[start]) // rotated second half
+            {
+                if (nums[mid] > target && nums[start] <= target)
+                {
+                    end = mid - 1;
+                }
+                else
+                {
+                    start = mid + 1;
+                }
+            }
+            else // rotated first half
+            {
+                if (nums[mid] < target && nums[end] >= target)
+                {
+                    start = mid + 1;
+                }
+                else
+                {
+                    end = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+}
+```
+
+#### Matrix + Binary Search
+```cpp
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) return false;
+        int row = 0, col = matrix[0].size() - 1;
+        
+        while (row < matrix.size() && col >= 0) 
+        {
+            if (target > matrix[row][col])
+            {
+                row++;
+            }
+            else if (target < matrix[row][col])
+            {   
+                col--;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+
+```
+
+#### Recursion + Binary Search
+```cpp
+class Solution {
+public:
+    double fastPow(double x, long long n) 
+    {
+        if (n == 0) 
+        {
+            return 1.0;
+        }
+        
+        double half = fastPow(x, n / 2);
+        
+        if (n % 2 == 0) 
+        {
+            return half * half;
+        } 
+        else 
+        {
+            return half * half * x;
+        }
+    }
+    
+    double myPow(double x, int n) 
+    {
+        // 1. case: n is negative => invert x to 1/x and turn n to positive
+        // 2. case: n is positve
+        long long N = n;
+        // convert N to non-negative value
+        if (N < 0) 
+        {
+            x = 1 / x;
+            N = -N;
+        }
+        
+        return fastPow(x, N);
+    }
+};
+
+```
