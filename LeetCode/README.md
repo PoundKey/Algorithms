@@ -378,7 +378,9 @@ public:
 ```
 
 ### Binary Search
-#### Regular Binary Search: First Occurrence + Last Occurence
+#### Regular Binary Search: 
+
+First Occurrence + Last Occurence
 ```cpp
 class Solution {
 public:
@@ -441,7 +443,37 @@ public:
 
         return res;    
     }
+    
+    // Sqrt of x: use left <= right, and return end
+    int mySqrt(int x) {
+        if (x <= 1) 
+        {
+            return x;
+        }
+        
+        int start = 0, end = x;  
+        while (start <= end) 
+        {
+            int mid = start + (end - start) / 2;
+            if (x / mid == mid) 
+            {
+                return mid;
+            } 
+            else if (x / mid < mid) 
+            {
+                end = mid - 1;
+            } 
+            else 
+            {
+                start = mid + 1;
+            }
+        }
+        
+        return end;
+    }
 };
+
+
 
 ```
 #### Prefix Sum + Binary Search
