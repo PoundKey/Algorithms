@@ -471,6 +471,40 @@ public:
         
         return end;
     }
+    
+    int findMin(vector<int>& nums) 
+    {
+        if (nums.empty())
+        {
+            return -1;
+        }
+        
+        int left = 0, right = nums.size() - 1;
+        int minVal = nums[left];
+        
+        while (left <= right)
+        {
+            if (left == right)
+            {
+                // must check, and must return
+                return nums[left];
+            }
+            
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[right])
+            {
+                // sorted right half, increase left
+                left = mid + 1;
+            }
+            else // nums[mid] < nums[right]
+            {
+                right = mid;
+            }
+        }
+        
+        return minVal;
+    }
+
 };
 
 
