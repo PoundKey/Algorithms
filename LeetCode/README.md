@@ -131,6 +131,49 @@ public:
             k--;
         }
     }
+    
+    // Intersection of three sorted arrays
+    vector<int> arraysIntersection(vector<int>& arr1, vector<int>& arr2, vector<int>& arr3) {
+        
+        vector<int> res;
+        int p1 = 0, p2 = 0, p3 = 0;
+        
+        while (p1 < arr1.size() && p2 < arr2.size() && p3 < arr3.size()) 
+        {
+            if (arr1[p1] == arr2[p2] && arr2[p2] == arr3[p3]) 
+            {
+                res.push_back(arr1[p1]);
+                p1++;
+                p2++;
+                p3++;
+            } 
+            else 
+            {
+                // move pointer with the smaller value forward
+                if (arr1[p1] < arr2[p2]) 
+                {
+                    p1++;
+                } 
+                else if (arr2[p2] < arr3[p3]) 
+                {
+                    p2++;
+                } 
+                else // arr1[p1] > arr2[p2] > arr3[p3] 
+                {
+                    p3++;
+                }
+                
+                /**
+                identify the the temp max, move the counter
+                int tmp = max(arr1[p1], max(arr2[p2], arr3[p3]));
+                while (p1 < n1 && arr1[p1] < tmp) p1++;
+                while (p2 < n2 && arr2[p2] < tmp) p2++;
+                while (p3 < n3 && arr3[p3] < tmp) p3++;
+                **/
+            }
+        }
+        return res;       
+    }
  }
 ```
 
@@ -235,6 +278,43 @@ public:
             }
         }
         return maxArea;
+    }
+    /**
+    977. Squares of a Sorted Array
+    Input: nums = [-7,-3,2,3,11]
+    Output: [4,9,9,49,121]
+    **/
+    vector<int> sortedSquares(vector<int>& nums) 
+    {
+        int n = nums.size();
+        vector<int> res(n);
+        
+        int left = 0, right = n - 1;
+        for (int i = n - 1; i >= 0; i--)
+        {
+            /**
+            1. populate the res from end of start
+            2. the candidates are:
+                2.1 left most number
+                2.2 right most number
+            3. compare their absolute val, and increment left pointer or decrement right pointer if it's selected
+            **/
+            int candidate;
+            if (abs(nums[left]) > abs(nums[right]))
+            {
+                candidate = nums[left];
+                left++;
+            }
+            else
+            {
+                candidate = nums[right];
+                right--;
+            }
+            
+            res[i] = candidate * candidate;
+        }
+        
+        return res;
     }
 }
 ```
