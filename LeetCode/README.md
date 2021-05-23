@@ -174,6 +174,27 @@ public:
         }
         return res;       
     }
+    
+    vector<int> findClosestElements(vector<int>& A, int k, int x) 
+    {
+        // identify the range by shrinking down the left and right pointer
+        // two pointers approach ---> sorted
+        int left = 0, right = A.size() - 1;
+        
+        while (right - left + 1 > k)
+        {
+            if (abs(A[left] - x) <= abs(A[right] - x))
+            {
+                right--;
+            }
+            else
+            {
+                left++;
+            }
+        }
+        
+        return vector<int>(A.begin() + left, A.begin() + right + 1);
+    }
  }
 ```
 
